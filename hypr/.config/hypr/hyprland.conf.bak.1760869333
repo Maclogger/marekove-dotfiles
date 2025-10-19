@@ -1,0 +1,109 @@
+# Learn how to configure Hyprland: https://wiki.hyprland.org/Configuring/
+
+# You're encouraged to tailor your Hyprland config in this file by adding or overwriting any settings.
+# But don't change anything that lives in ~/.local/share/omarchy, if you can help it!
+# Those files are overwritten when Omarchy is updated.
+
+# Change your personal monitor setup in here to keep the main config portable
+source = ~/.config/hypr/monitors.conf
+source = ~/.config/hypr/workspaces.conf
+
+# Use defaults Omarchy defaults
+source = ~/.local/share/omarchy/default/hypr/autostart.conf
+source = ~/.local/share/omarchy/default/hypr/bindings/media.conf
+source = ~/.local/share/omarchy/default/hypr/bindings/tiling.conf
+source = ~/.local/share/omarchy/default/hypr/bindings/utilities.conf
+source = ~/.local/share/omarchy/default/hypr/envs.conf
+source = ~/.local/share/omarchy/default/hypr/looknfeel.conf
+source = ~/.local/share/omarchy/default/hypr/input.conf
+source = ~/.local/share/omarchy/default/hypr/windows.conf
+source = ~/.config/omarchy/current/theme/hyprland.conf
+
+# Application bindings
+$terminal = uwsm app -- alacritty
+
+bind = SUPER, return, exec, $terminal
+bind = SUPER, T, exec, $terminal
+bind = SUPER, F, exec, uwsm app -- nautilus --new-window
+bind = SUPER, E, exec, flatpak run app.zen_browser.zen
+bind = SUPER, M, exec, uwsm app -- spotify
+bind = SUPER, N, exec, $terminal -e nvim
+bind = SUPER, Y, exec, $terminal -e btop
+bind = SUPER, D, exec, $terminal -e lazydocker
+
+# bind = SUPER, O, exec, uwsm app -- obsidian -disable-gpu
+
+# Extra autostart processes
+# exec-once = uwsm app -- my-service
+
+# Extra env variables
+# Note: You must relaunch Hyprland after changing envs (use Super+Esc, then Relaunch)
+# env = MY_GLOBAL_ENV,setting
+
+# Control your input devices
+# See https://wiki.hypr.land/Configuring/Variables/#input
+input {
+  # Use multiple keyboard layouts and switch between them with Alt + Space
+  # kb_layout = us,dk
+  kb_layout = sk
+  kb_variant = qwerty
+  kb_options = caps:escape
+
+  # Change speed of keyboard repeat
+  repeat_rate = 40
+  repeat_delay = 600
+
+  # Increase sensitity for mouse/trackpack (default: 0)
+  sensitivity = -0.3
+  accel_profile = flat
+
+  touchpad {
+    # Use natural (inverse) scrolling
+    natural_scroll = true
+
+    # Use two-finger clicks for right-click instead of lower-right corner
+    clickfinger_behavior = true
+
+    # Control the speed of your scrolling
+    scroll_factor = 0.2
+  }
+}
+
+# Scroll faster in the terminal
+windowrule = scrolltouchpad 1.5, class:Alacritty
+
+# NVIDIA environment variables
+env = NVD_BACKEND,direct
+env = LIBVA_DRIVER_NAME,nvidia
+env = __GLX_VENDOR_LIBRARY_NAME,nvidia
+
+#############################################
+################ MY SETTINGS ################
+#############################################
+
+bind = SUPER, J, pass
+
+bind = SUPER, h, movefocus, l
+bind = SUPER, l, movefocus, r
+bind = SUPER, j, movefocus, d
+bind = SUPER, k, movefocus, u
+
+# Toggle layout orientation
+bind = SUPER, O, layoutmsg, orientation
+bind = SUPER SHIFT, R, exec, hyprctl reload
+
+# Move to other workspaces
+bind = SUPER CONTROL, j, workspace, r+1
+bind = SUPER CONTROL, k, workspace, r-1
+
+# Move window to other workspaces
+bind = SUPER SHIFT, j, movetoworkspace, r+1
+bind = SUPER SHIFT, k, movetoworkspace, r-1
+
+# Move window to other monitos / locations
+bind = SUPER SHIFT, h, movewindow, l
+bind = SUPER SHIFT, l, movewindow, r
+
+# Rule for JetBrains PhpStorm popups with empty titles
+windowrulev2 = size 800 800, center, class:^(jetbrains-phpstorm)$, title:^$
+

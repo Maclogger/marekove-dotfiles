@@ -1,0 +1,1 @@
+/home/marek/.config/omarchy/current/theme/neovim.lua

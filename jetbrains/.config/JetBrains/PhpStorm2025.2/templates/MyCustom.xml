@@ -1,0 +1,35 @@
+<templateSet group="MyCustom">
+  <template name="toastError" value="useToastsStore().displayToast({&#10;    message: &quot;$MESSAGE$&quot;,&#10;    severity: ToastSeverity.ERROR,&#10;});&#10;" description="Toast ERROR" toReformat="false" toShortenFQNames="true">
+    <variable name="MESSAGE" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="JAVA_SCRIPT" value="true" />
+      <option name="TypeScript" value="true" />
+      <option name="Vue" value="true" />
+    </context>
+  </template>
+  <template name="toastInfo" value="useToastsStore().displayToast({&#10;    message: &quot;$MESSAGE$&quot;,&#10;});&#10;" description="Toast INFO" toReformat="false" toShortenFQNames="true">
+    <variable name="MESSAGE" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="JAVA_SCRIPT" value="true" />
+      <option name="TypeScript" value="true" />
+      <option name="Vue" value="true" />
+    </context>
+  </template>
+  <template name="toastGeneral" value="useToastsStore().displayToast({&#10;    message: &quot;$MESSAGE$&quot;,&#10;    severity: ToastSeverity.$SEVERITY$,&#10;});&#10;" description="Toast GENERAL" toReformat="false" toShortenFQNames="true">
+    <variable name="MESSAGE" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="SEVERITY" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="JAVA_SCRIPT" value="true" />
+      <option name="TypeScript" value="true" />
+      <option name="Vue" value="true" />
+    </context>
+  </template>
+  <template name="col" value="console.log($MESSAGE$);" description="console.log" toReformat="false" toShortenFQNames="true">
+    <variable name="MESSAGE" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="JAVA_SCRIPT" value="true" />
+      <option name="TypeScript" value="true" />
+      <option name="Vue" value="true" />
+    </context>
+  </template>
+</templateSet>

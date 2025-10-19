@@ -1,0 +1,6 @@
+-Dide.managed.by.toolbox=/home/marek/Downloads/jetbrains-toolbox-2.7.0.48109/bin/jetbrains-toolbox
+-Dtoolbox.notification.token=0f2ea6cc-8761-4b5d-93c9-2ad08caf01c8
+-Dtoolbox.notification.portFile=/home/marek/.cache/JetBrains/Toolbox/ports/80ee104a-3dd1-456c-8a99-547a7a19a0dd.port
+-Dide.ui.scale=1
+-Dawt.toolkit.name=WLToolkit
+-Xmx4096m
