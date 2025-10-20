@@ -50,12 +50,13 @@
   /* === Modules Center === */
   "custom/archicon": {
     "format": "",
-    "on-click": "wofi --show drun",
+    "on-click": "omarchy-menu system",
     "tooltip": false
   },
   "clock": {
     "format": "{:%H:%M:%S %d.%m.%Y}",
-    "interval": 1
+    "interval": 1,
+    "tooltip": false
   },
 
   /* === Modules Right === */
