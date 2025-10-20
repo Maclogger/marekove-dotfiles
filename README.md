@@ -4,7 +4,7 @@
 
 ## 🌟 O čom to je?
 
-Vitajte v mojom repozitári s dotfiles! Som programátor, milujem **Linux** a používam **Arch Linux** (konkrétne distribúciu [Omarchy](https://omarchy.com/)). 🐧
+Vitaj v mojom repozitári s dotfiles! Som programátor, milujem **Linux** a používam **Arch Linux** (konkrétne distribúciu [Omarchy](https://omarchy.com/)). 🐧
 
 Tento repozitár obsahuje všetky moje konfiguračné súbory (dotfiles), ktoré mi umožňujú rýchlo a jednoducho nastaviť moje pracovné prostredie na akom koľvek Linuxovom systéme. Vďaka utility [GNU Stow](https://www.gnu.org/software/stow/) je správa dotfiles neuveriteľne jednoduchá a bezpečná.
 
@@ -166,4 +166,4 @@ Tento repozitár mi už viackrát zachránil deň. Môžem len odporučiť každ
 
 Made with ❤️ and too many cups of ☕ by Marek
 
-*P.S.: Ak si tu len pretože si omylom zmazal svoje dotfiles, vedz že nie si sám. Stalo sa to najlepším z nás. 😅*
+*P.S.: Ak si tu len pretože si omylom zmazal svoje dotfiles, vedz že nie si sám. Stalo sa to aj najlepším z nás. 😅*
