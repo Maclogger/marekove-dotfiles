@@ -113,8 +113,6 @@ window#waybar.hidden {
   color: #89B4FA;
 }
 
-#workspaces button.active:hover {}
-
 /* Modules right */
 #taskbar {
   background: transparent;
