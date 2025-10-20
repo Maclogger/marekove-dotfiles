@@ -36,14 +36,13 @@
     "interval": 1
   },
   "cpu": {
-    "format": "{usage}% ",
-    "tooltip": true,
-    "tooltip-format": "Uso de CPU: {usage}%\nNúcleos: {cores}"
+    "format": " CPU:{usage}%",
+    "interval": 5
   },
   "memory": {
-    "format": "{}% 󰍛",
-    "tooltip": true,
-    "tooltip-format": "RAM en uso: {used} / {total} ({percentage}%)"
+    //"format": "󰍛 RAM:{}%",
+    "format": "󰍛 RAM:{used:0.1f}GiB / {total:0.1f}GiB",
+    "interval": 5
   },
   "disk": {
     "format": "{percentage_free}% ",
