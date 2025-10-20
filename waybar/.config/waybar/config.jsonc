@@ -8,15 +8,14 @@
   "gtk-layer-shell": true,
   /* === Modules Order === */
   "modules-left": [
-    "custom/archicon",
-    "clock",
     "cpu",
     "memory",
     "disk",
     "temperature"
   ],
   "modules-center": [
-    "hyprland/workspaces"
+    "custom/archicon",
+    "clock"
   ],
   "modules-right": [
     "wlr/taskbar",
@@ -33,12 +32,8 @@
     "tooltip": false
   },
   "clock": {
-    "timezone": "America/Mexico_City",
-    "format": "{:%I:%M  %d, %m}",
-    "tooltip-format": "{calendar}",
-    "calendar": {
-      "mode": "month"
-    }
+    "format": "{:%H:%M:%S %d.%m.%Y}",
+    "interval": 1
   },
   "cpu": {
     "format": "{usage}% ",
@@ -64,19 +59,11 @@
     ]
   },
   /* === Modules Center === */
-  "hyprland/workspaces": {
-    "format": "{icon}",
-    "format-icons": {
-      "default": "",
-      "active": ""
-    },
-    "persistent-workspaces": {
-      "*": 2
-    },
-    "disable-scroll": true,
-    "all-outputs": true,
-    "show-special": true
-  },
+
+
+
+
+
   /* === Modules Right === */
   "wlr/taskbar": {
     "format": "{icon}",
