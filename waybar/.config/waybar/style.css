@@ -21,11 +21,9 @@ window#waybar.hidden {
 #memory,
 #disk,
 #temperature,
-#idle_inhibitor,
 #pulseaudio,
-#pulseaudio-slider,
-#network,
-#language {
+#battery,
+#network {
   color: #161320;
   margin-top: 6px;
   margin-bottom: 6px;
@@ -37,6 +35,7 @@ window#waybar.hidden {
 /* Separation to the left */
 #custom-archicon,
 #cpu,
+#pulseaudio,
 #idle_inhibitor {
   margin-left: 5px;
   border-top-left-radius: 10px;
@@ -79,6 +78,10 @@ window#waybar.hidden {
 }
 
 #temperature {
+  background: #F8BD96;
+}
+
+#battery {
   background: #F8BD96;
 }
 
