@@ -68,13 +68,11 @@
     }
   },
   "network": {
-    "format": "{ifname}",
-    "format-ethernet": "{ifname} 󰈀",
-    "format-disconnected": " ",
-    "tooltip-format": " {ifname} via {gwaddr}",
-    "tooltip-format-ethernet": " {ifname} {ipaddr}/{cidr}",
-    "tooltip-format-disconnected": "Disconnected",
-    "max-length": 50
+    "format": "{essid} [{signalStrength}]% ",
+    "format-ethernet": "Ethernet 󰈀",
+    "format-disconnected": "  Offline",
+    "tooltip": false,
+    "on-click": "iwgtk"
   },
   "battery": {
     "format": "{capacity}% {icon}",
