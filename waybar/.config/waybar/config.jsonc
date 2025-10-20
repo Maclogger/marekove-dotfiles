@@ -20,6 +20,7 @@
   "modules-right": [
     "pulseaudio",
     "network",
+    "bluetooth",
     "battery"
   ],
   /* === Modules Left === */
@@ -34,7 +35,7 @@
     "tooltip": false
   },
   "disk": {
-    "format": " SSD {used} / {total}",
+    "format": " SSD {percentage_used}%",
     "tooltip": false
   },
   "temperature": {
@@ -65,20 +66,28 @@
         "",
         ""
       ]
-    }
+    },
+    "on-click": "alacritty --class=Wiremix -e wiremix"
   },
   "network": {
-    "format": "{essid} [{signalStrength}]% ",
+    "format": "{essid} [{signalStrength}]%  ",
     "format-ethernet": "Ethernet 󰈀",
     "format-disconnected": "  Offline",
     "tooltip": false,
     "on-click": "iwgtk"
   },
+  "bluetooth": {
+    "format": "{num_connections} ",
+    "format-disabled": "0 󰂲",
+    "format-connected": "{num_connections} ",
+    "tooltip": false,
+    "on-click": "blueberry"
+  },
   "battery": {
-    "format": "{capacity}% {icon}",
-    "format-discharging": "{capacity}% {icon}",
-    "format-charging": "{capacity}% {icon}",
-    "format-plugged": "{capacity}% ",
+    "format": "{capacity}% {icon} ",
+    "format-discharging": "{capacity}% {icon} ",
+    "format-charging": "{capacity}% {icon} ",
+    "format-plugged": "{capacity}%  ",
     "format-icons": {
       "charging": [
         "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"
@@ -87,7 +96,7 @@
         "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"
       ]
     },
-    "format-full": "{capacity}% 󰂅",
+    "format-full": "{capacity}% 󰂅 ",
     "tooltip": false,
     "interval": 5,
     "states": {

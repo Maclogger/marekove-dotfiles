@@ -22,6 +22,7 @@ window#waybar.hidden {
 #disk,
 #temperature,
 #pulseaudio,
+#bluetooth,
 #battery,
 #network {
   color: #161320;
@@ -34,7 +35,6 @@ window#waybar.hidden {
 
 /* Separation to the left */
 #custom-archicon,
-#cpu,
 #pulseaudio,
 #idle_inhibitor {
   margin-left: 5px;
@@ -155,7 +155,9 @@ window#waybar.hidden {
   min-width: 50px;
 }
 
-#pulseaudio-slider slider {}
+#bluetooth {
+  background: #87c5ff;
+}
 
 
 #network {
