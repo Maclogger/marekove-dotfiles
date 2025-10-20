@@ -26,6 +26,28 @@
     "hyprland/language"
   ],
   /* === Modules Left === */
+  "cpu": {
+    "format": " CPU {usage}%",
+    "interval": 5,
+    "tooltip": false
+  },
+  "memory": {
+    "format": "󰍛 RAM {used:0.1f}GiB / {total:0.1f}GiB",
+    "interval": 5,
+    "tooltip": false
+  },
+  "disk": {
+    "format": " SSD {used} / {total}",
+    "tooltip": false
+  },
+  "temperature": {
+    "format": "{temperatureC}°C {icon}",
+    "format-icons": [
+      ""
+    ],
+    "tooltip": false
+  },
+  /* === Modules Center === */
   "custom/archicon": {
     "format": "",
     "on-click": "wofi --show drun",
@@ -35,33 +57,6 @@
     "format": "{:%H:%M:%S %d.%m.%Y}",
     "interval": 1
   },
-  "cpu": {
-    "format": " CPU:{usage}%",
-    "interval": 5
-  },
-  "memory": {
-    //"format": "󰍛 RAM:{}%",
-    "format": "󰍛 RAM:{used:0.1f}GiB / {total:0.1f}GiB",
-    "interval": 5
-  },
-  "disk": {
-    "format": "{percentage_free}% ",
-    "tooltip": true,
-    "tooltip-format": "Espacio libre: {free} / {total} ({percentage_free}%)"
-  },
-  "temperature": {
-    "format": "{temperatureC}°C {icon}",
-    "tooltip": true,
-    "tooltip-format": "Temperatura actual: {temperatureC}°C\nCrítico si > 80°C",
-    "format-icons": [
-      ""
-    ]
-  },
-  /* === Modules Center === */
-
-
-
-
 
   /* === Modules Right === */
   "wlr/taskbar": {
