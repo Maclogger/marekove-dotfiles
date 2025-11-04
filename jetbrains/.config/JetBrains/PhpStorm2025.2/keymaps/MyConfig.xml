@@ -31,6 +31,7 @@
   </action>
   <action id="EditorIncreaseFontSize">
     <keyboard-shortcut first-keystroke="ctrl plus" />
+    <keyboard-shortcut first-keystroke="ctrl equals" />
   </action>
   <action id="EditorJoinLines" />
   <action id="EditorSelectWord" />
@@ -38,8 +39,24 @@
     <keyboard-shortcut first-keystroke="up" />
     <keyboard-shortcut first-keystroke="ctrl p" />
   </action>
+  <action id="ExpandAll">
+    <keyboard-shortcut first-keystroke="ctrl add" />
+  </action>
+  <action id="ExpandExpandableComponent">
+    <keyboard-shortcut first-keystroke="shift enter" />
+    <keyboard-shortcut first-keystroke="ctrl add" />
+  </action>
+  <action id="ExpandRecursively">
+    <keyboard-shortcut first-keystroke="ctrl add" />
+  </action>
+  <action id="ExpandRegion">
+    <keyboard-shortcut first-keystroke="ctrl add" />
+  </action>
   <action id="ExternalSystem.CollapseAll">
     <keyboard-shortcut first-keystroke="ctrl subtract" />
+  </action>
+  <action id="ExternalSystem.ExpandAll">
+    <keyboard-shortcut first-keystroke="ctrl add" />
   </action>
   <action id="FileChooser.NewFolder">
     <keyboard-shortcut first-keystroke="alt insert" />
@@ -53,11 +70,17 @@
     <keyboard-shortcut first-keystroke="shift ctrl f12" />
     <keyboard-shortcut first-keystroke="ctrl #1000148" />
   </action>
+  <action id="Images.Editor.ZoomIn">
+    <keyboard-shortcut first-keystroke="ctrl add" />
+  </action>
   <action id="Images.Editor.ZoomOut">
     <keyboard-shortcut first-keystroke="ctrl subtract" />
   </action>
   <action id="MTDockToolWindows">
     <keyboard-shortcut first-keystroke="shift ctrl semicolon" />
+  </action>
+  <action id="Markdown.Preview.IncreaseFontSize">
+    <keyboard-shortcut first-keystroke="ctrl add" />
   </action>
   <action id="MoveLineDown">
     <keyboard-shortcut first-keystroke="shift ctrl j" />
