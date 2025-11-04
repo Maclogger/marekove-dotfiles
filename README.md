@@ -29,6 +29,7 @@ Tento repozitár obsahuje konfigurácie pre:
 - 🖥️ **tmux** - terminálový multiplexer
 - 📊 **waybar** - status bar pre Wayland
 - ⌨️ **xkb** - rozloženie klávesnice
+- 🖱️ mx-master - moja myška Logitech MxMaster 3s (sudo stow -t / mx-master)
 
 ## 🚀 Inštalácia
 
