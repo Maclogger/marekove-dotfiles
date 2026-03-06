@@ -1,8 +1,4 @@
 source = ~/.config/omarchy/current/theme/hyprlock.conf
- 
-general {
-    ignore_empty_input = true
-}
 
 background {
     monitor =
@@ -39,5 +35,5 @@ input-field {
 }
 
 auth {
-    fingerprint:enabled = false
+    fingerprint:enabled = true
 }

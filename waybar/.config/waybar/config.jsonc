@@ -62,6 +62,8 @@
     "format": "{volume}% {icon}",
     "format-muted": " {format_source}",
     "format-icons": {
+      "headphone": "",
+      "headset": "",
       "default": [
         "",
         ""
@@ -81,7 +83,7 @@
     "format-disabled": "0 󰂲",
     "format-connected": "{num_connections} ",
     "tooltip": false,
-    "on-click": "blueberry"
+    "on-click": "omarchy-launch-bluetooth"
   },
   "battery": {
     "format": "{capacity}% {icon} ",
