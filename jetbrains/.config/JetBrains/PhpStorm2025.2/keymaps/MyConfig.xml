@@ -118,6 +118,11 @@
   <action id="NavBar-selectUp">
     <keyboard-shortcut first-keystroke="up" />
   </action>
+  <action id="NewElementSamePlace" />
+  <action id="NewScratchFile">
+    <keyboard-shortcut first-keystroke="shift ctrl alt insert" />
+    <keyboard-shortcut first-keystroke="ctrl alt insert" />
+  </action>
   <action id="NextSplitter">
     <keyboard-shortcut first-keystroke="ctrl l" />
   </action>
