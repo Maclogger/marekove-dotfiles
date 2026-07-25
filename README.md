@@ -21,6 +21,7 @@ Keďže som nešikovný a už sa mi **párkrát podarilo zmazať svoje dotfiles*
 
 Tento repozitár obsahuje konfigurácie pre:
 
+- 🖥️ **alacritty** - konfigurácia terminálového emulátora
 - 🐚 **bashrc** - konfigurácia Bash shellu
 - 🪟 **hypr** - [Hyprland](https://hyprland.org/) compositor (Wayland)
 - 💡 **ideavim** - Vim bindings pre JetBrains IDE
