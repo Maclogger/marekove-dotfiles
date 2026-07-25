@@ -45,9 +45,18 @@ Keďže ZSA Voyager nemá spoľahlivo dostupný fyzický Alt, správa okien a pa
 | Vrstva 3 (Hold Spc) + **V** | `Ctrl+Alt+V` | Split pod seba `─` |
 | Vrstva 3 (Hold Spc) + **C** | `Ctrl+Alt+C` | Zavrieť panel |
 | Vrstva 3 (Hold Spc) + **X** | `Ctrl+Alt+X` | Zavrieť okno |
+| Vrstva 3 (Hold Spc) + **R** | `Ctrl+Alt+R` | Premenovať aktuálne okno (prázdny prompt, netreba mazať starý názov) |
 | Vrstva 2 (Control) + **/** | `Ctrl+Shift+F12` | Zoom panelu (fullscreen toggle, rovnaká skratka ako v JetBrains) |
 
 Zodpovedajúce väzby sú v `tmux/.tmux.conf`.
+
+### Ukladanie a obnova rozloženia session (tmux-resurrect + tmux-continuum)
+
+- **Manuálne uložiť:** `Prefix + Ctrl+s`
+- **Manuálne obnoviť:** `Prefix + Ctrl+r`
+- **Automaticky:** `@continuum-restore` je zapnuté, takže sa posledné uložené rozloženie obnoví samo pri každom novom štarte tmux servera (napr. po reštarte PC). Continuum navyše priebežne ukladá stav na pozadí, takže netreba pamätať na manuálne ukladanie.
+
+Na novom stroji (po `stow tmux`) treba v tmuxe raz stlačiť `Prefix + I` (veľké i), aby si TPM stiahol tieto pluginy.
 
 ## 🚀 Inštalácia
 
