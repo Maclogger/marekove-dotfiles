@@ -39,11 +39,11 @@ Keďže ZSA Voyager nemá spoľahlivo dostupný fyzický Alt, správa okien a pa
 |---|---|---|
 | Vrstva 3 (Hold Spc) + **H** | `Ctrl+Shift+Tab` | Predchádzajúce okno |
 | Vrstva 3 (Hold Spc) + **L** | `Ctrl+Tab` | Ďalšie okno |
-| Vrstva 3 (Hold Spc) + **T** | `F13` | Nové okno |
-| Vrstva 3 (Hold Spc) + **S** | `F14` | Split vedľa seba `│` |
-| Vrstva 3 (Hold Spc) + **V** | `F15` | Split pod seba `─` |
-| Vrstva 3 (Hold Spc) + **C** | `F16` | Zavrieť panel |
-| Vrstva 3 (Hold Spc) + **X** | `F17` | Zavrieť okno |
+| Vrstva 3 (Hold Spc) + **T** | `Ctrl+Alt+T` | Nové okno |
+| Vrstva 3 (Hold Spc) + **S** | `Ctrl+Alt+S` | Split vedľa seba `│` |
+| Vrstva 3 (Hold Spc) + **V** | `Ctrl+Alt+V` | Split pod seba `─` |
+| Vrstva 3 (Hold Spc) + **C** | `Ctrl+Alt+C` | Zavrieť panel |
+| Vrstva 3 (Hold Spc) + **X** | `Ctrl+Alt+X` | Zavrieť okno |
 | Vrstva 2 (Control) + **/** | `Ctrl+Shift+F12` | Zoom panelu (fullscreen toggle, rovnaká skratka ako v JetBrains) |
 
 Zodpovedajúce väzby sú v `tmux/.tmux.conf`.
