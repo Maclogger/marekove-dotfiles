@@ -70,6 +70,7 @@
   <action id="ExpandRegion">
     <keyboard-shortcut first-keystroke="ctrl add" />
   </action>
+  <action id="ExportToTextFile" />
   <action id="ExternalSystem.CollapseAll">
     <keyboard-shortcut first-keystroke="ctrl subtract" />
   </action>
@@ -125,6 +126,10 @@
   </action>
   <action id="NextSplitter">
     <keyboard-shortcut first-keystroke="ctrl l" />
+  </action>
+  <action id="OptimizeImports">
+    <keyboard-shortcut first-keystroke="ctrl alt o" />
+    <keyboard-shortcut first-keystroke="alt o" />
   </action>
   <action id="PopupMenu-selectPrevious">
     <keyboard-shortcut first-keystroke="up" />
