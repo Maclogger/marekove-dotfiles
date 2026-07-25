@@ -31,6 +31,23 @@ Tento repozitár obsahuje konfigurácie pre:
 - ⌨️ **xkb** - rozloženie klávesnice
 - 🖱️ mx-master - moja myška Logitech MxMaster 3s (sudo stow -t / mx-master)
 
+## 🖥️ Tmux skratky (ZSA Voyager)
+
+Keďže ZSA Voyager nemá spoľahlivo dostupný fyzický Alt, správa okien a panelov v tmuxe beží cez no-prefix (`bind -n`) skratky namapované na klávesových vrstvách Voyageru namiesto klasického tmux prefixu (`Alt+s`):
+
+| Vrstva + klávesa | Posiela | tmux akcia |
+|---|---|---|
+| Vrstva 3 (Hold Spc) + **H** | `Ctrl+Shift+Tab` | Predchádzajúce okno |
+| Vrstva 3 (Hold Spc) + **L** | `Ctrl+Tab` | Ďalšie okno |
+| Vrstva 3 (Hold Spc) + **T** | `F13` | Nové okno |
+| Vrstva 3 (Hold Spc) + **S** | `F14` | Split vedľa seba `│` |
+| Vrstva 3 (Hold Spc) + **V** | `F15` | Split pod seba `─` |
+| Vrstva 3 (Hold Spc) + **C** | `F16` | Zavrieť panel |
+| Vrstva 3 (Hold Spc) + **X** | `F17` | Zavrieť okno |
+| Vrstva 2 (Control) + **/** | `Ctrl+Shift+F12` | Zoom panelu (fullscreen toggle, rovnaká skratka ako v JetBrains) |
+
+Zodpovedajúce väzby sú v `tmux/.tmux.conf`.
+
 ## 🚀 Inštalácia
 
 ### Predpoklady
