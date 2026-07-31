@@ -1,11 +1,11 @@
 {
   "layer": "top",
   "position": "top",
+  "autohide": true,
+  "autohide-blocked": false,
   "exclusive": true,
   "passthrough": false,
-  "fixed-center": true,
-  /* Waybar 0.15: CSS sa znovu načíta pri uložení style.css, config nie */
-  "reload_style_on_change": true,
+  "gtk-layer-shell": true,
   /* === Modules Order === */
   "modules-left": [
     "cpu",
@@ -40,7 +40,6 @@
   },
   "temperature": {
     "format": "{icon} {temperatureC}°C",
-    "critical-threshold": 85,
     "format-icons": [
       ""
     ],

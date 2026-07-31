@@ -29,8 +29,44 @@ Tento repozitár obsahuje konfigurácie pre:
 - ✏️ **nvim** - [Neovim](https://neovim.io/) konfigurácia
 - 🖥️ **tmux** - terminálový multiplexer
 - 📊 **waybar** - status bar pre Wayland
+- 🎨 **omarchy** - user template, ktorý farby waybaru napojí na aktuálnu Omarchy tému
 - ⌨️ **xkb** - rozloženie klávesnice
 - 🖱️ mx-master - moja myška Logitech MxMaster 3s (sudo stow -t / mx-master)
+
+## 🎨 Waybar farby podľa Omarchy témy
+
+Waybar nemá hardcoded farby — ťahá si ich z práve nastavenej Omarchy témy, takže po `omarchy theme set <nazov>` sa prebarví spolu s celým systémom.
+
+Ako to funguje:
+
+1. Každá Omarchy téma má `colors.toml` (accent, foreground, background, ANSI `color0`–`color15`).
+2. Tento repozitár dodáva user template `omarchy/.config/omarchy/themed/waybar-palette.css.tpl`. Omarchy pri každom `omarchy theme set` prerenderuje placeholdery `{{ color4 }}` a pod. a výsledok zapíše do `~/.config/omarchy/current/theme/waybar-palette.css`.
+3. `waybar/.config/waybar/style.css` si tento súbor importuje a moduly potom používajú len premenné (`@color4`, `@accent`, `@background`).
+
+Mapovanie modulov na farby témy:
+
+| Modul | Farba |
+|-------|-------|
+| cpu | `@color4` (modrá) |
+| memory | `@color5` (magenta) |
+| disk | `@color6` (cyan) |
+| temperature | `@color3` (žltá), nad 85 °C `@color1` |
+| archicon | pozadie `@background`, ikona `@accent` |
+| clock | `@color2` (zelená) |
+| pulseaudio | `@color7`, mute `@color0` |
+| network | `@color6`, offline `@color0` |
+| bluetooth | `@color4`, vypnuté `@color0` |
+| battery | `@color2`, pod 20 % `@color3`, pod 10 % `@color1` + blikanie |
+
+Text v každom module je `@background`, takže sa automaticky prevracia — na tmavých témach tmavý text na svetlej „pilulke", na svetlých témach (Catppuccin Latte, White) naopak.
+
+> ⚠️ Template sa vyhodnocuje **len pri `omarchy theme set`**. Po zmene `.tpl` súboru treba znovu nastaviť aktuálnu tému, aby sa paleta pregenerovala:
+> ```bash
+> OMARCHY_THEME_SKIP_BACKGROUND=1 omarchy theme set "$(omarchy theme current)"
+> ```
+> (`OMARCHY_THEME_SKIP_BACKGROUND=1` zabráni preblikaniu tapety na ďalšiu v poradí.)
+
+Zámerne sa súbor menuje `waybar-palette.css` a nie `waybar.css` — niektoré témy (Catppuccin, Lumon, Retro 82) si dodávajú vlastný `waybar.css`, ktorý by template prebil.
 
 ## 🖥️ Tmux skratky (ZSA Voyager)
 

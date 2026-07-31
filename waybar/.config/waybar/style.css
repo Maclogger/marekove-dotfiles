@@ -1,3 +1,13 @@
+/*
+ * Farby ťahám z aktuálnej Omarchy témy. Paletu generuje omarchy pri každom
+ * `omarchy theme set` z colors.toml danej témy podľa template-u
+ * ~/.config/omarchy/themed/waybar-palette.css.tpl (v marekove-dotfiles/omarchy/).
+ *
+ * Dostupné: @background @foreground @accent @cursor @selection_foreground
+ *           @selection_background @color0 .. @color15
+ */
+@import "../omarchy/current/theme/waybar-palette.css";
+
 /* -- Global rules -- */
 * {
   border: none;
@@ -7,14 +17,14 @@
 }
 
 window#waybar {
-  background: rgba(34, 36, 54, 0.0);
+  background: transparent;
 }
 
 window#waybar.hidden {
   opacity: 0.2;
 }
 
-/* - Genera rules for visible modules -- */
+/* - General rules for visible modules -- */
 #custom-archicon,
 #clock,
 #cpu,
@@ -25,7 +35,7 @@ window#waybar.hidden {
 #bluetooth,
 #battery,
 #network {
-  color: #161320;
+  color: @background;
   margin-top: 6px;
   margin-bottom: 6px;
   padding-left: 10px;
@@ -35,8 +45,7 @@ window#waybar.hidden {
 
 /* Separation to the left */
 #custom-archicon,
-#pulseaudio,
-#idle_inhibitor {
+#pulseaudio {
   margin-left: 5px;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
@@ -44,8 +53,7 @@ window#waybar.hidden {
 
 /* Separation to the rigth */
 #clock,
-#temperature,
-#language {
+#temperature {
   margin-right: 5px;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -54,149 +62,85 @@ window#waybar.hidden {
 /* -- Specific styles -- */
 
 /* Modules left */
+#cpu {
+  background: @color4;
+}
+
+#memory {
+  background: @color5;
+}
+
+#disk {
+  background: @color6;
+}
+
+#temperature {
+  background: @color3;
+}
+
+#temperature.critical {
+  background: @color1;
+}
+
+/* Modules center */
 #custom-archicon {
   font-size: 20px;
-  color: #89B4FA;
-  background: #161320;
+  color: @accent;
+  background: @background;
   padding-right: 17px;
 }
 
 #clock {
-  background: #ABE9B3;
-}
-
-#cpu {
-  background: #96CDFB;
-}
-
-#memory {
-  background: #DDB6F2;
-}
-
-#disk {
-  background: #F5C2E7;
-}
-
-#temperature {
-  background: #F8BD96;
-}
-
-#battery {
-  background: #F8BD96;
-}
-
-/* Modules center */
-#workspaces {
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 10px;
-  margin: 6px 5px;
-  padding: 0px 6px;
-}
-
-#workspaces button {
-  color: #B5E8E0;
-  background: transparent;
-  padding: 4px 4px;
-  transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
-}
-
-#workspaces button.occupied {
-  color: #A6E3A1;
-}
-
-#workspaces button.active {
-  color: #89B4FA;
-  text-shadow: 0 0 4px #ABE9B3;
-}
-
-#workspaces button:hover {
-  color: #89B4FA;
+  background: @color2;
 }
 
 /* Modules right */
-#taskbar {
-  background: transparent;
-  border-radius: 10px;
-  padding: 0px 5px;
-  margin: 6px 5px;
-}
-
-#taskbar button {
-  padding: 0px 5px;
-  margin: 0px 3px;
-  border-radius: 6px;
-  transition: background 0.3s ease;
-}
-
-#taskbar button.active {
-  background: rgba(34, 36, 54, 0.5);
-}
-
-#taskbar button:hover {
-  background: rgba(34, 36, 54, 0.5);
-}
-
-#idle_inhibitor {
-  background: #B5E8E0;
-  padding-right: 15px;
-}
-
 #pulseaudio {
   min-width: 55px;
-  color: #1A1826;
-  background: #F5E0DC;
+  background: @color7;
 }
 
-#pulseaudio-slider {
-  color: #1A1826;
-  background: #E8A2AF;
-  min-width: 50px;
+#pulseaudio.muted {
+  background: @color0;
+  color: @foreground;
 }
-
-#bluetooth {
-  background: #87c5ff;
-}
-
 
 #network {
-  background: #CBA6F7;
+  background: @color6;
   padding-right: 13px;
 }
 
-#language {
-  background: #A6E3A1;
-  padding-right: 15px;
+#network.disconnected {
+  background: @color0;
+  color: @foreground;
 }
 
-/* === Optional animation === */
+#bluetooth {
+  background: @color4;
+}
+
+#bluetooth.disabled {
+  background: @color0;
+  color: @foreground;
+}
+
+#battery {
+  background: @color2;
+}
+
+#battery.warning {
+  background: @color3;
+}
+
+#battery.critical {
+  background: @color1;
+  animation: blink 1s steps(2) infinite alternate;
+}
+
+/* Bliká len kriticky vybitá batéria */
 @keyframes blink {
   to {
-    background-color: #BF616A;
-    color: #B5E8E0;
+    background-color: @background;
+    color: @color1;
   }
-}
-
-#custom-voxtype {
-  min-width: 12px;
-  margin: 0 0 0 7.5px;
-}
-
-#custom-voxtype.recording {
-  color: #a55555;
-}
-
-#custom-idle-indicator.active,
-#custom-notification-silencing-indicator.active {
-  color: #a55555;
-}
-
-#custom-weather {
-  margin-left: 7.5px;
-  margin-right: 7.5px;
-}
-
-#custom-weather.unavailable {
-  min-width: 0;
-  margin: 0;
-  padding: 0;
 }
