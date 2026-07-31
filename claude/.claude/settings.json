@@ -1,0 +1,25 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "model": "sonnet",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '[.cwd, (.last_assistant_message // \"\")] | @tsv' | { IFS=$'\\t' read -r cwd msg; dir=$(basename \"$cwd\"); snippet=$(echo \"$msg\" | tr '\\n' ' ' | cut -c1-100); notify-send -t 20000 \"Claude Code — $dir\" \"$snippet\" 2>/dev/null; canberra-gtk-play -i complete 2>/dev/null || paplay /usr/share/sounds/freedesktop/stereo/complete.oga 2>/dev/null; } || true"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "rust-analyzer-lsp@claude-plugins-official": false
+  },
+  "effortLevel": "high",
+  "theme": "auto",
+  "switchModelsOnFlag": true
+}

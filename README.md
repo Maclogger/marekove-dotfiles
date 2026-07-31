@@ -23,6 +23,7 @@ Tento repozitár obsahuje konfigurácie pre:
 
 - 🖥️ **alacritty** - konfigurácia terminálového emulátora
 - 🐚 **bashrc** - konfigurácia Bash shellu
+- 🤖 **claude** - Claude Code (`~/.claude/settings.json` - hooky, model, permissions)
 - 🪟 **hypr** - [Hyprland](https://hyprland.org/) compositor (Wayland)
 - 💡 **ideavim** - Vim bindings pre JetBrains IDE
 - 🔧 **jetbrains** - konfigurácie pre JetBrains IDE
