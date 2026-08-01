@@ -58,6 +58,7 @@ Mapovanie modulov na farby témy:
 | network | `@color6`, offline `@color0` |
 | bluetooth | `@color4`, vypnuté `@color0` |
 | battery | `@color2`, pod 20 % `@color3`, pod 10 % `@color1` + blikanie |
+| custom/claudebar | farbí si text sám (číta ten istý `colors.toml`), pozadie `@background` ako archicon |
 
 Text v každom module je `@background`, takže sa automaticky prevracia — na tmavých témach tmavý text na svetlej „pilulke", na svetlých témach (Catppuccin Latte, White) naopak.
 
@@ -68,6 +69,12 @@ Text v každom module je `@background`, takže sa automaticky prevracia — na t
 > (`OMARCHY_THEME_SKIP_BACKGROUND=1` zabráni preblikaniu tapety na ďalšiu v poradí.)
 
 Zámerne sa súbor menuje `waybar-palette.css` a nie `waybar.css` — niektoré témy (Catppuccin, Lumon, Retro 82) si dodávajú vlastný `waybar.css`, ktorý by template prebil.
+
+## 🤖 Waybar modul: Claude usage
+
+`custom/claudebar` zobrazuje aktuálne využitie 5-hodinového session limitu Claude (percento + countdown do resetu), tooltip pridáva aj týždenný limit a progress bary. Používa [claudebar](https://github.com/mryll/claudebar) — nezávislý AUR balíček (`yay -S claudebar`), ktorý číta OAuth token z `~/.claude/.credentials.json` a volá oficiálny (ale nedokumentovaný) endpoint `api.anthropic.com/api/oauth/usage` — teda skutočné dáta z Anthropic účtu, nie odhad z lokálnych logov. Farby si ťahá sám z `~/.config/omarchy/current/theme/colors.toml`, takže sa prebarvuje spolu s ostatnými modulmi.
+
+Interval je zámerne 300s — endpoint má prísny rate limit, pri kratšom pollingu hádže 429 (viď [claude-code#30930](https://github.com/anthropics/claude-code/issues/30930)); claudebar má vlastný 60s cache a pri zlyhaní ukáže `⏸` so starými dátami.
 
 ## 🖥️ Tmux skratky (ZSA Voyager)
 

@@ -18,6 +18,7 @@
     "clock"
   ],
   "modules-right": [
+    "custom/claudebar",
     "pulseaudio",
     "network",
     "bluetooth",
@@ -59,6 +60,14 @@
   },
 
   /* === Modules Right === */
+  "custom/claudebar": {
+    "exec": "claudebar --icon '󰚩' --format '{session_pct}% ({session_reset})'",
+    "return-type": "json",
+    "interval": 300,
+    "signal": 13,
+    "tooltip": true,
+    "on-click": "xdg-open https://claude.ai/settings/usage"
+  },
   "pulseaudio": {
     "format": "{volume}% {icon}",
     "format-muted": " {format_source}",

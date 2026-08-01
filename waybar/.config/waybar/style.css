@@ -31,6 +31,7 @@ window#waybar.hidden {
 #memory,
 #disk,
 #temperature,
+#custom-claudebar,
 #pulseaudio,
 #bluetooth,
 #battery,
@@ -45,7 +46,7 @@ window#waybar.hidden {
 
 /* Separation to the left */
 #custom-archicon,
-#pulseaudio {
+#custom-claudebar {
   margin-left: 5px;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
@@ -95,6 +96,11 @@ window#waybar.hidden {
 }
 
 /* Modules right */
+/* claudebar si farbí text sám (číta ten istý colors.toml), preto len tmavý badge ako archicon */
+#custom-claudebar {
+  background: @background;
+}
+
 #pulseaudio {
   min-width: 55px;
   background: @color7;
