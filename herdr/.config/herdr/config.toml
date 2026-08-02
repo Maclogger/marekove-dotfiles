@@ -1,0 +1,174 @@
+# herdr config — keybindings mirrored from the live tmux setup
+#
+# Source of truth: the *running* tmux server's key tables, captured with
+#   tmux list-keys -T root   /   tmux list-keys -T prefix
+# Both ~/.tmux.conf (stow: tmux/) and ~/.config/tmux/tmux.conf are loaded by
+# tmux 3.6a, and their bindings merge (XDG file wins on conflicts). The mapping
+# below reflects that merged, actually-live state — not either file alone.
+#
+# Reload after editing:  prefix+q   (or: herdr server reload-config)
+# Validate:              herdr config check
+
+[keys]
+
+# ---------------------------------------------------------------------------
+# Prefix
+# ---------------------------------------------------------------------------
+# tmux: set -g prefix C-Space  /  set -g prefix2 C-b
+# herdr supports a single prefix, so C-b (the secondary) is dropped.
+prefix = "ctrl+space"
+
+# ---------------------------------------------------------------------------
+# ZSA Voyager "Hold-Spc" layer — direct, no-prefix chords
+# These are the bindings from tmux/.tmux.conf that live in the root key table.
+# ---------------------------------------------------------------------------
+
+# tmux: bind -n C-M-t  new-window
+new_tab = ["ctrl+alt+t", "prefix+c"]
+
+# tmux: bind -n C-M-s  split-window -h   → new pane to the RIGHT (side by side)
+# herdr calls this "Split right" = split_vertical (vertical divider, vim :vsplit).
+split_vertical = ["ctrl+alt+s", "prefix+v"]
+
+# tmux: bind -n C-M-v  split-window -v   → new pane BELOW (stacked)
+# herdr calls this "Split down" = split_horizontal.
+split_horizontal = ["ctrl+alt+v", "prefix+h"]
+
+# tmux: bind -n C-M-c  kill-pane   |  bind -T prefix x  kill-pane
+close_pane = ["ctrl+alt+c", "prefix+x"]
+
+# tmux: bind -n C-M-x  kill-window  |  bind -T prefix k  kill-window
+close_tab = ["ctrl+alt+x", "prefix+k"]
+
+# tmux: bind -n C-M-r  command-prompt "Rename window:"  |  bind -T prefix r  rename-window
+rename_tab = ["ctrl+alt+r", "prefix+r"]
+
+# tmux: bind -n C-S-F12  resize-pane -Z  |  bind -T prefix z  resize-pane -Z
+zoom = ["ctrl+shift+f12", "prefix+z"]
+
+# ---------------------------------------------------------------------------
+# Tab (tmux "window") navigation
+# ---------------------------------------------------------------------------
+# tmux: bind -n C-Tab next-window / bind -n C-BTab previous-window
+#       bind -n M-Right / M-Left select-window +1 / -1
+#       bind -T prefix n / p     next-window / previous-window
+next_tab     = ["ctrl+tab", "alt+right", "prefix+n"]
+previous_tab = ["ctrl+shift+tab", "alt+left", "prefix+p"]
+
+# tmux: bind -T prefix 1..9  select-window -t N   |  bind -n M-1..M-9  select-window -t N
+switch_tab = ["prefix+1..9", "alt+1..9"]
+
+# ---------------------------------------------------------------------------
+# Pane focus
+# ---------------------------------------------------------------------------
+# tmux: bind -n C-M-Left/Right/Up/Down  select-pane -L/-R/-U/-D
+# Note: prefix+j / prefix+l are select-pane -D / -R in the live tmux config,
+# but prefix+h and prefix+k are NOT pane focus there (the XDG config overrides
+# them to split-window -v and kill-window). That asymmetry is preserved above.
+#
+# tmux: bind -n C-h/j/k/l  (vim-tmux-navigator, with an is_vim guard)
+# herdr has no Vim-aware conditional, so these are unconditional — see the
+# caveat note at the bottom of this file.
+focus_pane_left  = ["ctrl+h", "ctrl+alt+left"]
+focus_pane_down  = ["ctrl+j", "ctrl+alt+down", "prefix+j"]
+focus_pane_up    = ["ctrl+k", "ctrl+alt+up"]
+focus_pane_right = ["ctrl+l", "ctrl+alt+right", "prefix+l"]
+
+# ---------------------------------------------------------------------------
+# Workspaces (closest herdr analogue to tmux sessions)
+# ---------------------------------------------------------------------------
+# tmux: bind -n M-Up / M-Down   switch-client -p / -n
+#       bind -T prefix P / N    switch-client -p / -n
+previous_workspace = ["alt+up", "prefix+shift+p"]
+next_workspace     = ["alt+down", "prefix+shift+n"]
+
+# tmux: bind -T prefix C  new-session
+# ctrl+alt+e joins the ZSA Voyager direct-chord family (ctrl+alt+<letter>).
+new_workspace = ["ctrl+alt+e", "prefix+shift+c"]
+# tmux: bind -T prefix R  rename-session
+rename_workspace = ["prefix+shift+r", "prefix+shift+w"]
+# tmux: bind -T prefix K  kill-session
+close_workspace = ["prefix+shift+k", "prefix+shift+d"]
+# tmux: bind -T prefix s / w  choose-tree (session / window picker)
+workspace_picker = ["prefix+w", "prefix+s"]
+# Jump straight to workspace N (no tmux equivalent).
+switch_workspace = "prefix+shift+1..9"
+
+# ---------------------------------------------------------------------------
+# Agents (no tmux equivalent — herdr-only concept)
+#
+# Hierarchy: workspace > tab > pane > agent. The sidebar lists every agent
+# grouped by workspace with its state (working / blocked / done / idle).
+# These cycle the sidebar rows and jump focus straight to that agent's pane,
+# across workspaces.
+# ---------------------------------------------------------------------------
+previous_agent = ["ctrl+alt+comma", "ctrl+shift+up"]
+next_agent     = ["ctrl+alt+period", "ctrl+shift+down"]
+focus_agent    = "prefix+alt+1..9"
+
+# Jump to whichever agent most recently raised a notification.
+open_notification_target = "prefix+o"
+
+# ---------------------------------------------------------------------------
+# Session / config
+# ---------------------------------------------------------------------------
+# tmux: bind -T prefix d  detach-client
+detach = "prefix+d"
+# tmux: bind -T prefix q  source-file ~/.config/tmux/tmux.conf   (reload)
+reload_config = "prefix+q"
+# Moved off prefix+s (taken by workspace_picker above, mirroring tmux choose-tree).
+settings = "prefix+shift+s"
+# Moved off prefix+r (taken by rename_tab above, mirroring tmux rename-window).
+# Enter the mode, then use arrows/hjkl to resize, esc to exit.
+resize_mode = "prefix+ctrl+r"
+
+# ---------------------------------------------------------------------------
+# Direct pane resize — tmux: bind -n C-M-S-<arrow> resize-pane -L/-R/-U/-D 5
+#
+# herdr has no direct directional resize *action* (only resize_mode), so these
+# reproduce it 1:1 via the socket API. --amount is a fraction of the split,
+# not cells; bump 0.05 if the steps feel too small.
+# ---------------------------------------------------------------------------
+
+[[keys.command]]
+key = "ctrl+alt+shift+left"
+type = "shell"
+command = "herdr pane resize --current --direction left --amount 0.05"
+description = "resize pane left (tmux: C-M-S-Left)"
+
+[[keys.command]]
+key = "ctrl+alt+shift+right"
+type = "shell"
+command = "herdr pane resize --current --direction right --amount 0.05"
+description = "resize pane right (tmux: C-M-S-Right)"
+
+[[keys.command]]
+key = "ctrl+alt+shift+up"
+type = "shell"
+command = "herdr pane resize --current --direction up --amount 0.05"
+description = "resize pane up (tmux: C-M-S-Up)"
+
+[[keys.command]]
+key = "ctrl+alt+shift+down"
+type = "shell"
+command = "herdr pane resize --current --direction down --amount 0.05"
+description = "resize pane down (tmux: C-M-S-Down)"
+
+
+# ---------------------------------------------------------------------------
+# Caveat: ctrl+h/j/k/l pane focus
+#
+# herdr intercepts these before forwarding to the pane, so inside panes:
+#   ctrl+l  no longer clears the screen  (use the `clear` command)
+#   ctrl+k  no longer kills to end of line
+#   ctrl+h  no longer acts as backspace
+#   ctrl+j  no longer sends a literal newline
+#
+# tmux had the same trade-off, except vim-tmux-navigator's `is_vim` guard
+# forwarded the keys to Neovim when Neovim was focused. herdr has no such
+# conditional, so Neovim's own ctrl+h/j/k/l split navigation will NOT receive
+# these keys — herdr eats them first.
+#
+# If that becomes a problem, drop "ctrl+h"/"ctrl+j"/"ctrl+k"/"ctrl+l" from the
+# focus_pane_* arrays above; ctrl+alt+<arrow> stays bound as a fallback.
+# ---------------------------------------------------------------------------

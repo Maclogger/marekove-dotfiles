@@ -1,3 +1,10 @@
 *.key
 **/node/
 **/*.license
+
+# herdr runtime state - poistka, keby sa ~/.config/herdr niekedy zlinkoval
+# celý (stow bez --no-folding); do repa patrí len config.toml
+herdr/.config/herdr/*.log
+herdr/.config/herdr/plugins.json
+herdr/.config/herdr/.plugins.lock
+herdr/.config/herdr/sessions/

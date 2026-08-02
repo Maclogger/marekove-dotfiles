@@ -24,6 +24,7 @@ Tento repozitár obsahuje konfigurácie pre:
 - 🖥️ **alacritty** - konfigurácia terminálového emulátora
 - 🐚 **bashrc** - konfigurácia Bash shellu
 - 🤖 **claude** - Claude Code (`~/.claude/settings.json` - hooky, model, permissions)
+- 🐑 **herdr** - [herdr](https://herdr.dev) multiplexer pre AI agentov (skratky zrkadlia tmux)
 - 🪟 **hypr** - [Hyprland](https://hyprland.org/) compositor (Wayland)
 - 💡 **ideavim** - Vim bindings pre JetBrains IDE
 - 🔧 **jetbrains** - konfigurácie pre JetBrains IDE
@@ -101,6 +102,51 @@ Zodpovedajúce väzby sú v `tmux/.tmux.conf`.
 - **Automaticky:** `@continuum-restore` je zapnuté, takže sa posledné uložené rozloženie obnoví samo pri každom novom štarte tmux servera (napr. po reštarte PC). Continuum navyše priebežne ukladá stav na pozadí, takže netreba pamätať na manuálne ukladanie.
 
 Na novom stroji (po `stow tmux`) treba v tmuxe raz stlačiť `Prefix + I` (veľké i), aby si TPM stiahol tieto pluginy.
+
+## 🐑 herdr (multiplexer pre AI agentov)
+
+[herdr](https://herdr.dev) je alternatíva k tmuxu, ktorá v bočnom paneli ukazuje stav každého AI agenta (`working` / `blocked` / `done` / `idle`). Skúšobná inštalácia popri tmuxe - tmux zostáva nedotknutý, dá sa kedykoľvek vrátiť.
+
+**Inštalácia binárky** (nie je súčasťou stow balíka):
+
+```bash
+curl -fsSL https://herdr.dev/install.sh | sh   # -> ~/.local/bin/herdr
+# alebo cez AUR: yay -S herdr-bin
+```
+
+**Stow - POZOR, treba `--no-folding`:**
+
+```bash
+stow --no-folding herdr
+```
+
+Bez `--no-folding` stow zlinkuje celý adresár `~/.config/herdr` do repa a herdr si doň potom zapisuje logy (`herdr.log`, `herdr-server.log`, `plugins.json`). S `--no-folding` je symlink len na `config.toml` a runtime súbory zostanú mimo gitu. To isté platí pri hromadnom `stow */`.
+
+**Skratky Voyageru sú rovnaké ako v tmuxe** - `config.toml` zrkadlí živé tmux väzby:
+
+| Vrstva + klávesa | Posiela | herdr akcia |
+|---|---|---|
+| Vrstva 3 (Hold Spc) + **H** | `Ctrl+Shift+Tab` | Predchádzajúci tab |
+| Vrstva 3 (Hold Spc) + **L** | `Ctrl+Tab` | Ďalší tab |
+| Vrstva 3 (Hold Spc) + **T** | `Ctrl+Alt+T` | Nový tab |
+| Vrstva 3 (Hold Spc) + **S** | `Ctrl+Alt+S` | Split vedľa seba `│` (`split_vertical`) |
+| Vrstva 3 (Hold Spc) + **V** | `Ctrl+Alt+V` | Split pod seba `─` (`split_horizontal`) |
+| Vrstva 3 (Hold Spc) + **C** | `Ctrl+Alt+C` | Zavrieť panel |
+| Vrstva 3 (Hold Spc) + **X** | `Ctrl+Alt+X` | Zavrieť tab |
+| Vrstva 3 (Hold Spc) + **R** | `Ctrl+Alt+R` | Premenovať tab |
+| Vrstva 2 (Control) + **/** | `Ctrl+Shift+F12` | Zoom panelu |
+
+Prefix je `Ctrl+Space` (rovnako ako v tmuxe; herdr nepodporuje sekundárny prefix, takže `Ctrl+b` odpadá).
+
+**Užitočné príkazy:**
+
+```bash
+herdr config check          # validácia config.toml (hlási aj neznáme kľúče)
+herdr server reload-config  # reload bez reštartu (alebo Prefix+q)
+herdr config reset-keys     # záloha configu + zmazanie vlastných skratiek
+```
+
+Pri chybe v `config.toml` herdr **potichu spadne na defaultné skratky** - preto po každej úprave spusti `herdr config check`.
 
 ## 🚀 Inštalácia
 
