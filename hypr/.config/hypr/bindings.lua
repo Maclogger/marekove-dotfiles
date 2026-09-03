@@ -81,3 +81,16 @@ hl.unbind("SUPER + ALT + SPACE")  -- was: Apps menu
 
 o.bind("SUPER + SPACE", "Apps menu", "omarchy-menu toggle apps")
 o.bind("SUPER + ALT + SPACE", "Omarchy menu", "omarchy-menu toggle")
+
+--------------------------------------------------------------------------
+-- Appearance (MEH = CTRL + ALT + SHIFT)
+--
+-- The ZSA layout is built around MEH, and no application uses these
+-- combos, so they never collide. Omarchy's own SPACE-based defaults
+-- (SUPER+SHIFT+SPACE, SUPER+CTRL+SPACE, SUPER+SHIFT+CTRL+SPACE) are left
+-- in place alongside these.
+--------------------------------------------------------------------------
+
+o.bind_toggle("CTRL + ALT + SHIFT + F", "Toggle top bar", "bar")
+o.bind("CTRL + ALT + SHIFT + Y", "Theme menu", "omarchy-menu toggle theme")
+o.bind("CTRL + ALT + SHIFT + U", "Background switcher", "omarchy-menu toggle background")
