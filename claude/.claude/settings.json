@@ -20,7 +20,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '[.cwd, (.message // \"\")] | @tsv' | { IFS=$'\\t' read -r cwd msg; dir=$(basename \"$cwd\"); snippet=$(echo \"$msg\" | tr '\\n' ' ' | cut -c1-100); notify-send -u critical -i dialog-question -t 20000 \"Claude Code — čaká na vstup — $dir\" \"$snippet\" 2>/dev/null; paplay --volume=39321 /usr/share/sounds/freedesktop/stereo/complete.oga 2>/dev/null || canberra-gtk-play -i complete 2>/dev/null; } || true"
+            "command": "jq -r '[.cwd, (.message // \"\")] | @tsv' | { IFS=$'\\t' read -r cwd msg; dir=$(basename \"$cwd\"); snippet=$(echo \"$msg\" | tr '\\n' ' ' | cut -c1-100); idf=\"${XDG_RUNTIME_DIR:-/tmp}/claude-code-waiting-notif-id\"; old=$(cat \"$idf\" 2>/dev/null); case \"$old\" in \"\"|*[!0-9]*) set -- ;; *) set -- -r \"$old\" ;; esac; new=$(notify-send -p \"$@\" -u normal -i dialog-question -t 20000 \"Claude Code — čaká na vstup — $dir\" \"$snippet\" 2>/dev/null); [ -n \"$new\" ] && printf \"%s\" \"$new\" > \"$idf\"; paplay --volume=39321 /usr/share/sounds/freedesktop/stereo/complete.oga 2>/dev/null || canberra-gtk-play -i complete 2>/dev/null; } || true"
           }
         ]
       }
@@ -30,6 +30,13 @@
     "rust-analyzer-lsp@claude-plugins-official": false
   },
   "effortLevel": "high",
+  "voice": {
+    "enabled": false,
+    "mode": "hold"
+  },
   "theme": "auto",
-  "switchModelsOnFlag": true
+  "switchModelsOnFlag": true,
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": false
 }
