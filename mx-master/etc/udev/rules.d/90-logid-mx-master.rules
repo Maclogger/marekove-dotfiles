@@ -1,0 +1,9 @@
+# Restart logid when the MX Master 4 attaches, so its logid.cfg profile is
+# applied on every Bluetooth (re)connect, not just when logid happens to start
+# after the mouse is already up.
+#
+# 0005 = Bluetooth bus, 046D = Logitech, B042 = MX Master 4.
+# logid.service has ExecStartPre=sleep 10, which gives the device time to
+# settle before logid probes it.
+ACTION=="add", SUBSYSTEM=="hidraw", KERNELS=="0005:046D:B042.*", \
+  RUN+="/usr/bin/systemctl --no-block restart logid.service"
