@@ -1,0 +1,4 @@
+#!/bin/bash
+# Re-apply the enlarged theme/background switcher after `omarchy update`
+# overwrites the packaged ImagePicker.qml. No-op when already patched.
+exec omarchy-patch-image-picker-size

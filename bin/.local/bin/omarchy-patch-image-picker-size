@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+#
+# Enlarge the Omarchy theme/background switcher (omarchy.image-picker).
+#
+# The switcher's dimensions are hardcoded pixel properties in the packaged
+# ImagePicker.qml. There is no supported way to override them:
+#
+#   - shell.qml summons the overlay by the literal id "omarchy.image-picker",
+#     so a renamed clone is never used;
+#   - PluginRegistry.qml rejects any third-party plugin claiming an "omarchy.*"
+#     id ("Third-party plugins never shadow first-party ids");
+#   - the manifest declares no settings schema, ImagePicker.qml has no settings
+#     property, and the IPC payload carries no size fields.
+#
+# So this patches the packaged file in place, and is installed as an
+# omarchy post-update hook to re-apply itself after every update overwrites it.
+#
+# It is idempotent: already-patched files are left alone and exit 0 quietly.
+# If an expected line is missing (upstream rewrote the file), it patches
+# nothing and reports rather than corrupting anything.
+
+set -uo pipefail
+
+TARGET=/usr/share/omarchy/shell/plugins/image-picker/ImagePicker.qml
+
+# --- geometry -------------------------------------------------------------
+# property name -> desired value. Scaled 1.6x from the stock 768x475, with the
+# aspect ratio and the slice overlap kept proportional.
+#   expandedWidth  768 -> 1230     sliceWidth    108 -> 173
+#   expandedHeight 475 ->  760     sliceHeight   432 -> 690
+#   sliceSpacing   -30 ->  -48     skewOffset     28 ->  45
+DESIRED=(
+  "expandedWidth=1230"
+  "expandedHeight=760"
+  "sliceWidth=173"
+  "sliceHeight=690"
+  "sliceSpacing=-48"
+  "skewOffset=45"
+)
+
+# --- label fonts ----------------------------------------------------------
+# The labels use Style.font.display / .title, which scale with the shell's
+# font base-size. shell.toml sets base-size 16, so they render at 32px and
+# 18px instead of the stock 24px and 14px. That is wanted everywhere else,
+# but oversized against the preview here, so pin them to the stock values.
+FONT_FROM=("font.pixelSize: Style.font.display" "font.pixelSize: Style.font.title")
+FONT_TO=("font.pixelSize: 24" "font.pixelSize: 14")
+
+note() {
+  # The hook runs unattended during `omarchy update`, so say something visible.
+  command -v omarchy-notification-send >/dev/null 2>&1 &&
+    omarchy-notification-send -g 󰋩 "Image picker" "$1" || echo "image-picker: $1"
+}
+
+# sudo when there is a terminal to type a password into, pkexec otherwise
+# (an agent or a graphical context). Passwordless sudo short-circuits both.
+as_root() {
+  if sudo -n true 2>/dev/null; then sudo "$@"
+  elif [[ -t 0 ]]; then sudo "$@"
+  else pkexec "$@"
+  fi
+}
+
+[[ -f $TARGET ]] || { note "not found: $TARGET"; exit 0; }
+
+changed=0
+missing=()
+sed_args=()
+
+for pair in "${DESIRED[@]}"; do
+  name=${pair%%=*}
+  want=${pair#*=}
+
+  current=$(grep -oP "^\s*property int ${name}:\s*\K-?\d+" "$TARGET" | head -1)
+  if [[ -z $current ]]; then
+    missing+=("$name")
+    continue
+  fi
+  [[ $current == "$want" ]] && continue
+
+  sed_args+=(-e "s|^\(\s*property int ${name}:\s*\)-\?[0-9]\+|\1${want}|")
+  changed=1
+done
+
+for i in "${!FONT_FROM[@]}"; do
+  from=${FONT_FROM[$i]}
+  to=${FONT_TO[$i]}
+
+  if grep -qF "$to" "$TARGET"; then
+    continue                                  # already pinned
+  elif grep -qF "$from" "$TARGET"; then
+    sed_args+=(-e "s|$(sed 's/[.[\*^$/]/\\&/g' <<<"$from")|${to}|")
+    changed=1
+  else
+    missing+=("${from##*: }")                 # neither form present
+  fi
+done
+
+if ((${#missing[@]})); then
+  note "upstream changed ImagePicker.qml; not patching: ${missing[*]}"
+  exit 0
+fi
+
+if ((changed == 0)); then
+  exit 0
+fi
+
+if ! as_root sed -i "${sed_args[@]}" "$TARGET"; then
+  note "failed to patch ImagePicker.qml"
+  exit 1
+fi
+
+# During `omarchy update` the shell is restarted after hooks run anyway, so
+# this only matters when the script is invoked by hand.
+if pgrep -f 'quickshell -n -p /usr/share/omarchy/shell' >/dev/null 2>&1; then
+  omarchy restart shell >/dev/null 2>&1 || true
+fi
+
+note "switcher resized to 1230x760, labels pinned to 24/14px"
