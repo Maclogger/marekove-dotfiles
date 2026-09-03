@@ -8,3 +8,6 @@ herdr/.config/herdr/*.log
 herdr/.config/herdr/plugins.json
 herdr/.config/herdr/.plugins.lock
 herdr/.config/herdr/sessions/
+
+# Timestamped zálohy configov (omarchy refresh aj vlastné) - git je záloha
+*.bak.[0-9]*

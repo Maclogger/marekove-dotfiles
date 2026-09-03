@@ -23,17 +23,83 @@ Tento repozitár obsahuje konfigurácie pre:
 
 - 🖥️ **alacritty** - konfigurácia terminálového emulátora
 - 🐚 **bashrc** - konfigurácia Bash shellu
-- 🤖 **claude** - Claude Code (`~/.claude/settings.json` - hooky, model, permissions)
+- 🤖 **claude** - Claude Code (`~/.claude/settings.json` - hooky, model, permissions; `~/.claude/CLAUDE.md` - globálne instrukcie)
 - 🐑 **herdr** - [herdr](https://herdr.dev) multiplexer pre AI agentov (skratky zrkadlia tmux)
 - 🪟 **hypr** - [Hyprland](https://hyprland.org/) compositor (Wayland)
 - 💡 **ideavim** - Vim bindings pre JetBrains IDE
 - 🔧 **jetbrains** - konfigurácie pre JetBrains IDE
 - ✏️ **nvim** - [Neovim](https://neovim.io/) konfigurácia
 - 🖥️ **tmux** - terminálový multiplexer
-- 📊 **waybar** - status bar pre Wayland
-- 🎨 **omarchy** - user template, ktorý farby waybaru napojí na aktuálnu Omarchy tému
+- 📊 **waybar** - status bar pre Wayland (⚠️ Omarchy 4 waybar uz nepouziva - viď sekciu o Quattro)
+- 🎨 **omarchy** - Omarchy shell: `shell.json` (layout baru), `shell.toml` (velkost fontu),
+  vlastne klony pluginov v `plugins/` a user template pre farby waybaru
+- 🦶 **foot** - terminal foot (default od Omarchy 4), vratane `Ctrl+Backspace` = zmazat slovo
+- 🧰 **bin** - vlastne skripty v `~/.local/bin`
 - ⌨️ **xkb** - rozloženie klávesnice
-- 🖱️ mx-master - moja myška Logitech MxMaster 3s (sudo stow -t / mx-master)
+- 🖱️ mx-master - moja myška Logitech MX Master 4 (`sudo stow -t / mx-master`) - `logid.cfg`,
+  udev pravidlo na restart logid pri Bluetooth pripojeni a systemd override pre `logid.service`
+
+## 🚀 Omarchy 4 „Quattro" — čo sa zmenilo
+
+Upgrade z Omarchy 3.8.4 na 4.0.2 nahradil celý shell Quickshellom. **Waybar, Walker, Mako,
+SwayOSD, hyprlock, hypridle, swaybg a polkit-gnome sú preč** a Hyprland sa konfiguruje v Lua.
+Migrácia nechala staré `.conf` súbory na disku, ale vygenerovala prázdne `.lua` šablóny —
+takže všetko nižšie bolo treba preniesť ručne.
+
+### Hyprland: `.conf` → `.lua`
+
+| Súbor | Čo obsahuje |
+|---|---|
+| `hypr/.config/hypr/monitors.lua` | 3 monitory s explicitnými pozíciami (eDP-1 \| HDMI-A-1 \| DP-2) |
+| `hypr/.config/hypr/bindings.lua` | vim navigácia (h/j/k/l + kurzorové), launchery, swap `SUPER+SPACE` ↔ `SUPER+ALT+SPACE` |
+| `hypr/.config/hypr/input.lua` | `accel_profile = flat`, `repeat_delay = 600` |
+| `hypr/.config/hypr/hyprland.lua` | veľkosť kurzora (`XCURSOR_SIZE` + `HYPRCURSOR_SIZE`) |
+
+> ⚠️ **Pozície monitorov sú explicitné zámerne.** Panel Display (`SUPER+CTRL+D`) posiela pri
+> zmene scale `position = "auto"`, čím Hyprland prehodí poradie monitorov. Preto je v `bin`
+> balíku skript `omarchy-monitor-scale-keep-layout`, ktorý scale zmení, poradie zachová a
+> výsledok zapíše do `monitors.lua`. Klon pluginu `marek.monitor` volá jeho namiesto
+> systémového `omarchy-hyprland-monitor-scaling`. Ak sa layout aj tak rozsype: `hyprctl reload`.
+
+### Veľkosť kurzora — pozor na dostupné veľkosti
+
+Adwaita má bitmapy len pre **24, 30, 36, 48, 72, 96**. Iná hodnota sa zaokrúhli na najbližšiu
+(28 → 24, 32 → 36), takže sa zdá, že sa nič nezmenilo. Aktuálne nastavené **36** na troch
+miestach — dve v `hyprland.lua` a jedno v gsettings, ktoré **nie je súbor** a stow ho nepokrýva:
+
+```bash
+gsettings set org.gnome.desktop.interface cursor-size 36
+```
+
+Aplikovať bez odhlásenia (appky spustené cez uwsm čítajú systemd user environment, nie Hyprland):
+
+```bash
+hyprctl setcursor default 36
+systemctl --user set-environment XCURSOR_SIZE=36 HYPRCURSOR_SIZE=36
+```
+
+### Klony pluginov shellu
+
+Vlastné úpravy shellu nikdy nepatria do `/usr/share/omarchy/` — prepíše ich update. Namiesto
+toho `omarchy plugin clone <id>`, čo vytvorí kópiu v `~/.config/omarchy/plugins/`:
+
+- **`marek.monitor`** (klon `omarchy.monitor`) — scale nerozhodí poradie monitorov;
+  enable/disable displeja používa `hyprctl eval` namiesto `hyprctl keyword`, ktorý Hyprland
+  pod Lua parserom odmieta (upstream je tam no-op).
+- **`marek.agents`** (klon `omarchy.agents`) — v bare zobrazuje percento využitia limitu
+  a logo Claude namiesto ikony robota; detail v tooltipe.
+
+> Po úprave `.qml` v klone treba `omarchy restart shell` — samotný hot-reload ponechá v bare
+> starú instanciu komponentu.
+
+### Čo nie je v stow balíkoch
+
+- **gsettings** (`cursor-size`) — dconf, nie súbor; viď príkaz vyššie.
+- **`/etc` súbory z `mx-master`** — treba `sudo stow -t / mx-master`. Ak tam už reálne súbory
+  sú, stow zahlási konflikt; najprv ich zmazať (`sudo rm`), potom stowovať.
+- **`logid`** — binárka je manuálny build v `/usr/local/bin/logid`, nie pacman balík.
+- **`~/.config/omarchy/bar/scripts/`, `extensions/omarchy-menu.jsonc`, `hooks/`** — zostali
+  netrackované, sú to staršie vlastné úpravy mimo tohto upgradu.
 
 ## 🎨 Waybar farby podľa Omarchy témy
 
