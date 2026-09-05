@@ -1,0 +1,6 @@
+# Let marek flip the MX Master 4 between hi-res and per-detent scrolling from a
+# Hyprland keybinding, which has no terminal to ask for a password in.
+#
+# mx-scroll-mode is root:root 0755, so it cannot be rewritten without root, and
+# only these four fixed arguments are permitted.
+marek ALL=(root) NOPASSWD: /usr/local/bin/mx-scroll-mode toggle, /usr/local/bin/mx-scroll-mode desktop, /usr/local/bin/mx-scroll-mode gaming, /usr/local/bin/mx-scroll-mode status

@@ -94,3 +94,14 @@ o.bind("SUPER + ALT + SPACE", "Omarchy menu", "omarchy-menu toggle")
 o.bind_toggle("CTRL + ALT + SHIFT + F", "Toggle top bar", "bar")
 o.bind("CTRL + ALT + SHIFT + Y", "Theme menu", "omarchy-menu toggle theme")
 o.bind("CTRL + ALT + SHIFT + U", "Background switcher", "omarchy-menu toggle background")
+
+--------------------------------------------------------------------------
+-- Hardware (MEH = CTRL + ALT + SHIFT)
+--------------------------------------------------------------------------
+
+-- XWayland turns every high-resolution scroll event into its own button 4/5
+-- click, so one detent reads as several scrolls in CS2. This flips the mouse
+-- between hi-res (smooth, desktop) and one event per detent (gaming), and
+-- notifies which mode is now live.
+o.bind("CTRL + ALT + SHIFT + P", "Toggle MX Master smooth scroll",
+  "/home/marek/.local/bin/mx-scroll-toggle")

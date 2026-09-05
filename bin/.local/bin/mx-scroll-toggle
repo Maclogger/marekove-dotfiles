@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+#
+# mx-scroll-toggle — keybinding front-end for mx-scroll-mode (CTRL+ALT+SHIFT+P).
+#
+# Flips the MX Master 4 between smooth (hi-res) scrolling and one wheel click
+# per detent, then says which mode is now live. Like the Claude Code hooks, it
+# stores the id notify-send hands back and replays it with -r, so repeated
+# toggles replace the previous bubble instead of stacking.
+#
+# Usage: mx-scroll-toggle [toggle|desktop|gaming|status]   (default: toggle)
+
+set -uo pipefail
+
+HELPER=/usr/local/bin/mx-scroll-mode
+ID_FILE="${XDG_RUNTIME_DIR:-/tmp}/mx-scroll-notif-id"
+LOG="${XDG_RUNTIME_DIR:-/tmp}/mx-scroll-toggle.log"
+LOCK="${XDG_RUNTIME_DIR:-/tmp}/mx-scroll-toggle.lock"
+
+# A keybinding gives no stderr to look at, so leave a breadcrumb per run.
+log() { printf '%s  %s\n' "$(date '+%F %T')" "$*" >> "$LOG"; }
+
+notify() {
+  local icon=$1 title=$2 body=$3
+  local -a replace=()
+  local prev="" id=""
+
+  [[ -r $ID_FILE ]] && prev=$(<"$ID_FILE")
+  [[ $prev =~ ^[0-9]+$ ]] && replace=(-r "$prev")
+
+  id=$(notify-send -p "${replace[@]}" -a "MX Master 4" -i "$icon" \
+       -u normal -t 5000 "$title" "$body") || return 0
+  [[ -n $id ]] && printf '%s' "$id" > "$ID_FILE"
+  return 0
+}
+
+action=${1:-toggle}
+log "invoked: action=$action"
+
+if [[ $action == status ]]; then
+  sudo -n "$HELPER" status
+  exit $?
+fi
+
+# The switch takes ~11 s, which is long enough to hit the key again. Without a
+# lock those runs race: each reads the mode, flips it and restarts logid, and
+# the last one to finish decides the outcome. Drop the extra presses instead.
+exec {lock_fd}>"$LOCK"
+if ! flock -n "$lock_fd"; then
+  log "busy: a switch is already running"
+  notify input-mouse "MX Master 4" "Scroll mode switch already in progress…"
+  exit 0
+fi
+
+# logid.service carries ExecStartPre=sleep 10, so the restart is not instant.
+notify input-mouse "MX Master 4" "Switching scroll mode… (logid restart takes ~10 s)"
+
+out=$(sudo -n "$HELPER" "$action" 2>&1)
+rc=$?
+
+if (( rc != 0 )); then
+  log "FAILED rc=$rc: $out"
+  notify dialog-error "Scroll mode change failed" "${out:-$HELPER exited with $rc}"
+  exit "$rc"
+fi
+
+log "now: $out"
+
+case $out in
+  desktop)
+    notify input-mouse "Smooth scrolling: ON" \
+      "Hi-res scroll active — normal desktop mode"
+    ;;
+  gaming)
+    notify input-gaming "Smooth scrolling: OFF" \
+      "One click per detent — CS2 / gaming mode"
+    ;;
+  *)
+    notify dialog-error "Scroll mode: unknown" "$out"
+    ;;
+esac

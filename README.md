@@ -38,6 +38,9 @@ Tento repozitár obsahuje konfigurácie pre:
 - ⌨️ **xkb** - rozloženie klávesnice
 - 🖱️ mx-master - moja myška Logitech MX Master 4 (`sudo stow -t / mx-master`) - `logid.cfg`,
   udev pravidlo na restart logid pri Bluetooth pripojeni a systemd override pre `logid.service`
+- 🖱️ **mx-scroll** - prepinac hi-res („smooth") scrollovania na MX Master 4, keybind `MEH + P`.
+  XWayland robi z kazdej hi-res scroll udalosti vlastny klik button 4/5, takze v CS2 sa jeden
+  zarez kolieska pocita ako viac scrollov. Instaluje sa kopirovanim, **nie stowom** - vid nizsie
 
 ## 🚀 Omarchy 4 „Quattro" — čo sa zmenilo
 
@@ -98,6 +101,10 @@ toho `omarchy plugin clone <id>`, čo vytvorí kópiu v `~/.config/omarchy/plugi
 - **`/etc` súbory z `mx-master`** — treba `sudo stow -t / mx-master`. Ak tam už reálne súbory
   sú, stow zahlási konflikt; najprv ich zmazať (`sudo rm`), potom stowovať.
 - **`logid`** — binárka je manuálny build v `/usr/local/bin/logid`, nie pacman balík.
+- **`mx-scroll`** — inštaluje sa kopírovaním (`sudo bash mx-scroll/install.sh`), nie stowom.
+  `sudo` ignoruje všetko v `/etc/sudoers.d`, čo nie je regulárny root súbor, takže symlink by
+  ticho zabil NOPASSWD pravidlo; a `mx-scroll-mode` cez to pravidlo beží ako root, takže symlink
+  do tohto (užívateľsky zapisovateľného) repa by z neho spravil cestu k rootu.
 - **`~/.config/omarchy/bar/scripts/`, `extensions/omarchy-menu.jsonc`, `hooks/`** — zostali
   netrackované, sú to staršie vlastné úpravy mimo tohto upgradu.
 

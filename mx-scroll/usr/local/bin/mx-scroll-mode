@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+#
+# mx-scroll-mode — switch the Logitech MX Master 4 between high-resolution
+# ("smooth") scrolling and one wheel event per detent.
+#
+# Why: XWayland turns each high-resolution scroll event into its own button
+# 4/5 click, so a single detent registers as several scrolls inside CS2 and
+# other XWayland games. Dropping hi-res at the device makes the wheel emit
+# exactly one classic wheel event per detent again.
+#
+# How: /etc/logid.cfg is the symlink stow created into the dotfiles repo.
+# Desktop mode leaves that symlink exactly as stow made it. Gaming mode
+# regenerates /etc/logid-gaming.cfg from the very same file with `hires`
+# flipped to false and repoints the symlink there, so the tracked config is
+# never modified and the two can never drift apart.
+#
+# Usage: mx-scroll-mode [toggle|desktop|gaming|status]   (default: toggle)
+# Prints the resulting mode on stdout.
+
+set -euo pipefail
+
+CFG=/etc/logid.cfg
+GAMING=/etc/logid-gaming.cfg
+DESKTOP_REF=/etc/logid-scroll-mode.desktop
+UNIT=logid
+
+die() { printf '%s\n' "$*" >&2; exit 1; }
+
+mode() {
+  if [[ -L $CFG && $(readlink -f "$CFG") == "$GAMING" ]]; then
+    echo gaming
+  else
+    echo desktop
+  fi
+}
+
+# Record the stow-created link verbatim, so desktop mode restores the exact
+# same relative target and a later `stow` still recognises it as its own.
+remember_desktop() {
+  [[ -L $CFG ]] || die "$CFG is not a symlink; refusing to touch it"
+  readlink "$CFG" > "$DESKTOP_REF"
+}
+
+desktop_raw() {
+  [[ -s $DESKTOP_REF ]] || die "no recorded desktop config path in $DESKTOP_REF"
+  head -n1 "$DESKTOP_REF"
+}
+
+desktop_abs() {
+  local raw
+  raw=$(desktop_raw)
+  if [[ $raw == /* ]]; then
+    printf '%s\n' "$raw"
+  else
+    readlink -f "/etc/$raw"   # relative links resolve against /etc
+  fi
+}
+
+to_gaming() {
+  local src
+  src=$(desktop_abs)
+  [[ -r $src ]] || die "cannot read desktop config $src"
+  sed 's/\(hires[[:space:]]*:[[:space:]]*\)true/\1false/' "$src" > "$GAMING.new"
+  if ! grep -qE 'hires[[:space:]]*:[[:space:]]*false' "$GAMING.new"; then
+    rm -f "$GAMING.new"
+    die "no 'hires: true' line found in $src — nothing to turn off"
+  fi
+  chmod 0644 "$GAMING.new"
+  mv -f "$GAMING.new" "$GAMING"
+  ln -sfn "$GAMING" "$CFG"
+}
+
+to_desktop() {
+  ln -sfn "$(desktop_raw)" "$CFG"
+}
+
+action=${1:-toggle}
+now=$(mode)
+
+if [[ $now == desktop ]]; then
+  remember_desktop
+fi
+
+case $action in
+  status)
+    printf '%s\n' "$now"
+    exit 0
+    ;;
+  toggle)
+    if [[ $now == desktop ]]; then target=gaming; else target=desktop; fi
+    ;;
+  desktop|gaming)
+    target=$action
+    ;;
+  *)
+    die "usage: ${0##*/} [toggle|desktop|gaming|status]"
+    ;;
+esac
+
+if [[ $target == "$now" ]]; then
+  printf '%s\n' "$now"
+  exit 0
+fi
+
+case $target in
+  gaming)  to_gaming ;;
+  desktop) to_desktop ;;
+esac
+
+systemctl restart "$UNIT"
+printf '%s\n' "$target"
