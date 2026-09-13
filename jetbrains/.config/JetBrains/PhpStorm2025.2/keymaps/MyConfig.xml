@@ -1,8 +1,4 @@
 <keymap version="1" name="MyConfig" parent="Default for GNOME">
-  <action id="$SelectAll">
-    <keyboard-shortcut first-keystroke="ctrl a" />
-    <keyboard-shortcut first-keystroke="shift ctrl alt a" />
-  </action>
   <action id="ActivateCommitToolWindow">
     <keyboard-shortcut first-keystroke="alt 0" />
     <keyboard-shortcut first-keystroke="ctrl g" />
@@ -40,9 +36,6 @@
     <mouse-shortcut keystroke="button1 doubleClick" />
     <keyboard-shortcut first-keystroke="enter" />
     <keyboard-shortcut first-keystroke="alt enter" />
-  </action>
-  <action id="Editor SelectAll">
-    <keyboard-shortcut first-keystroke="shift ctrl alt a" />
   </action>
   <action id="EditorDecreaseFontSize">
     <keyboard-shortcut first-keystroke="ctrl minus" />
@@ -83,6 +76,12 @@
   <action id="FileChooser.TogglePathBar" />
   <action id="FindNext">
     <keyboard-shortcut first-keystroke="f3" />
+  </action>
+  <action id="GitLab.Merge.Request.Changes.MarkNotViewed">
+    <keyboard-shortcut first-keystroke="shift ctrl alt z" />
+  </action>
+  <action id="GitLab.Merge.Request.Changes.MarkViewed">
+    <keyboard-shortcut first-keystroke="shift ctrl alt a" />
   </action>
   <action id="GotoClass" />
   <action id="GotoFile" />
@@ -189,6 +188,9 @@
   <action id="ToggleBookmark" />
   <action id="ToggleFullScreen">
     <keyboard-shortcut first-keystroke="f11" />
+  </action>
+  <action id="Tree-selectAll">
+    <keyboard-shortcut first-keystroke="ctrl a" />
   </action>
   <action id="Tree-selectPrevious">
     <keyboard-shortcut first-keystroke="up" />
