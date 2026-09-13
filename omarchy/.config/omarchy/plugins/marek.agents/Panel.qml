@@ -336,16 +336,41 @@ Panel {
   }
 
   // Upstream renders a fixed robot glyph here, so the numbers only appear once
-  // the panel is open. This shows the binding limit's percentage inline
-  // instead: bindingWindow() already picks the fullest window, which is the one
-  // that stops the next prompt. WidgetButton rather than BarIconButton because
-  // the latter pins itself to a square icon slot and would clip "100%".
+  // the panel is open. This shows the percentages inline instead. Not
+  // bindingWindow()'s single fullest window: the short and the long window
+  // answer different questions — "can I keep going right now" and "will I last
+  // the week" — and a 0% session hidden behind a 43% week is exactly the number
+  // worth seeing. WidgetButton rather than BarIconButton because the latter
+  // pins itself to a square icon slot and would clip "0% / 100%".
+  function barWindow(p, title) {
+    var windows = root.limitWindows(p)
+    for (var i = 0; i < windows.length; i++) {
+      if (windows[i].title === title && windows[i].percent >= 0) return windows[i]
+    }
+    return null
+  }
+
+  readonly property var barSessionWindow: barWindow(provider, "Session")
+  // Monthly stands in for providers billed by the month; the slot means
+  // "the long window", whichever one this provider actually publishes.
+  readonly property var barLongWindow: barWindow(provider, "Weekly") || barWindow(provider, "Monthly")
+
+  // A window missing from the record holds its slot as an en dash rather than
+  // collapsing the text, so the widget keeps its width and the remaining
+  // number does not silently change meaning. Claude drops the session entry
+  // whenever its saved sign-in expires, which is often enough to matter.
   readonly property string barPercentText: {
-    if (!root.headline || !(root.headline.percent >= 0)) return "󱚣"
-    var pct = Math.round(root.headline.percent * 100)
+    if (!root.barSessionWindow && !root.barLongWindow) return "󱚣"
     // Panel does not expose `vertical`; read it off the bar the way
-    // WidgetButton does. A side bar is narrow, so drop the "%" there.
-    return (root.bar && root.bar.vertical) ? String(pct) : pct + "%"
+    // WidgetButton does. A side bar is too narrow for "0% / 43%", so the "%"
+    // goes and the two numbers stack.
+    var vertical = !!(root.bar && root.bar.vertical)
+    var suffix = vertical ? "" : "%"
+    var session = (root.barSessionWindow
+      ? String(Math.round(root.barSessionWindow.percent * 100)) : "–") + suffix
+    var long_ = (root.barLongWindow
+      ? String(Math.round(root.barLongWindow.percent * 100)) : "–") + suffix
+    return session + (vertical ? "\n" : " / ") + long_
   }
 
   WidgetButton {
@@ -433,6 +458,10 @@ Panel {
         font.pixelSize: button.fontSize
         renderType: Text.NativeRendering
         anchors.verticalCenter: parent.verticalCenter
+        // The vertical bar stacks the two numbers, and a stacked Text would
+        // otherwise ragged-left against the mark.
+        horizontalAlignment: Text.AlignHCenter
+        lineHeight: 0.95
 
         Behavior on color {
           enabled: !root.bar || root.bar.foregroundAnimationEnabled
