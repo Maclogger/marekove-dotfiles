@@ -33,3 +33,7 @@ require("default.hypr.toggles")
 -- cursor, XCURSOR_SIZE the XWayland and GTK/Qt apps.
 hl.env("XCURSOR_SIZE", "36")
 hl.env("HYPRCURSOR_SIZE", "36")
+
+-- Netflix runs in an XWayland Chrome instance (see the "Netflix" app launcher);
+-- XWayland app windows come up floating, so force it into the tiling layout.
+o.window("netflix-x11", { tile = true })
