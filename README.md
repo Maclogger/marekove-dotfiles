@@ -1,192 +1,193 @@
-# 🏠 Marekove Dotfiles
+# 🏠 Marek's Dotfiles
 
-> *"Keď sa mi párkrát podarilo zmazať svoje konfigurácie, rozhodol som sa to vyriešiť ako správny programátor." - Marek*
+> *"After managing to delete my configs a few times, I decided to solve it like a proper programmer." — Marek*
 
-## 🌟 O čom to je?
+## 🌟 What is this?
 
-Vitaj v mojom repozitári s dotfiles! Som programátor, milujem **Linux** a používam **Arch Linux** (konkrétne distribúciu [Omarchy](https://omarchy.com/)). 🐧
+Welcome to my dotfiles repository! I'm a programmer, I love **Linux**, and I run **Arch Linux** — specifically the [Omarchy](https://omarchy.com/) distribution. 🐧
 
-Tento repozitár obsahuje všetky moje konfiguračné súbory (dotfiles), ktoré mi umožňujú rýchlo a jednoducho nastaviť moje pracovné prostredie na akom koľvek Linuxovom systéme. Vďaka utility [GNU Stow](https://www.gnu.org/software/stow/) je správa dotfiles neuveriteľne jednoduchá a bezpečná.
+This repository holds all my configuration files (dotfiles), which let me set up my working environment quickly and easily on any Linux system. Thanks to [GNU Stow](https://www.gnu.org/software/stow/), managing dotfiles is remarkably simple and safe.
 
-## 🎯 Prečo tento repozitár existuje?
+## 🎯 Why does this repository exist?
 
-Keďže som nešikovný a už sa mi **párkrát podarilo zmazať svoje dotfiles** (čo nebolo vôbec príjemné 😱), rozhodol som sa použiť Git a GNU Stow na ich správu. Teraz mám:
+Because I'm clumsy and have **managed to delete my dotfiles several times** (not a pleasant experience 😱), I decided to use Git and GNU Stow to manage them. Now I have:
 
-- ✅ **Zálohu** všetkých konfigurácií v cloude
-- ✅ **Verzionovanie** - môžem sa vrátiť k starším verziám
-- ✅ **Jednoduchú inštaláciu** na nových systémoch
-- ✅ **Bezpečnú správu** - už žiadne náhodné zmazania!
+- ✅ **A backup** of every config in the cloud
+- ✅ **Version history** — I can go back to older versions
+- ✅ **Easy installation** on new systems
+- ✅ **Safe management** — no more accidental deletions!
 
-## 📦 Čo je tu obsiahnuté?
+## 📦 What's included?
 
-Tento repozitár obsahuje konfigurácie pre:
+This repository contains configurations for:
 
-- 🖥️ **alacritty** - konfigurácia terminálového emulátora
-- 🐚 **bashrc** - konfigurácia Bash shellu
-- 🤖 **claude** - Claude Code (`~/.claude/settings.json` - hooky, model, permissions; `~/.claude/CLAUDE.md` - globálne instrukcie)
-- 🐑 **herdr** - [herdr](https://herdr.dev) multiplexer pre AI agentov (skratky zrkadlia tmux)
+- 🖥️ **alacritty** - terminal emulator config
+- 🐚 **bashrc** - Bash shell config
+- 🤖 **claude** - Claude Code (`~/.claude/settings.json` - hooks, model, permissions; `~/.claude/CLAUDE.md` - global instructions)
+- 🐑 **herdr** - the [herdr](https://herdr.dev) multiplexer for AI agents (shortcuts mirror tmux)
 - 🪟 **hypr** - [Hyprland](https://hyprland.org/) compositor (Wayland)
-- 💡 **ideavim** - Vim bindings pre JetBrains IDE
-- 🔧 **jetbrains** - konfigurácie pre JetBrains IDE
-- ✏️ **nvim** - [Neovim](https://neovim.io/) konfigurácia
-- 🖥️ **tmux** - terminálový multiplexer
-- 🎨 **omarchy** - Omarchy shell: `shell.json` (layout baru), `shell.toml` (velkost fontu)
-  a vlastne klony pluginov v `plugins/`
-- 🦶 **foot** - terminal foot (default od Omarchy 4), vratane `Ctrl+Backspace` = zmazat slovo
-- 🧰 **bin** - vlastne skripty v `~/.local/bin`
-- ⌨️ **xkb** - rozloženie klávesnice
-- 🖱️ mx-master - moja myška Logitech MX Master 4 (`sudo stow -t / mx-master`) - `logid.cfg`,
-  udev pravidlo na restart logid pri Bluetooth pripojeni a systemd override pre `logid.service`
-- 🖱️ **mx-scroll** - prepinac hi-res („smooth") scrollovania na MX Master 4, keybind `MEH + P`.
-  XWayland robi z kazdej hi-res scroll udalosti vlastny klik button 4/5, takze v CS2 sa jeden
-  zarez kolieska pocita ako viac scrollov. Instaluje sa kopirovanim, **nie stowom** - vid nizsie
+- 💡 **ideavim** - Vim bindings for JetBrains IDEs
+- 🔧 **jetbrains** - JetBrains IDE configuration
+- ✏️ **nvim** - [Neovim](https://neovim.io/) configuration
+- 🖥️ **tmux** - terminal multiplexer
+- 🎨 **omarchy** - Omarchy shell: `shell.json` (bar layout), `shell.toml` (font size)
+  and my own plugin clones in `plugins/`
+- 🦶 **foot** - the foot terminal (default since Omarchy 4), including `Ctrl+Backspace` = delete word
+- 🧰 **bin** - my own scripts in `~/.local/bin`
+- ⌨️ **xkb** - keyboard layout
+- 🖱️ mx-master - my Logitech MX Master 4 mouse (`sudo stow -t / mx-master`) - `logid.cfg`,
+  a udev rule that restarts logid on Bluetooth connect, and a systemd override for `logid.service`
+- 🖱️ **mx-scroll** - toggle for hi-res ("smooth") scrolling on the MX Master 4, keybind `MEH + P`.
+  XWayland turns every hi-res scroll event into its own button 4/5 click, so in CS2 a single
+  wheel detent counts as several scrolls. Installed by copying, **not by stow** - see below
 
-## 🚀 Omarchy 4 „Quattro" — čo sa zmenilo
+## 🚀 Omarchy 4 "Quattro" — what changed
 
-Upgrade z Omarchy 3.8.4 na 4.0.2 nahradil celý shell Quickshellom. **Waybar, Walker, Mako,
-SwayOSD, hyprlock, hypridle, swaybg a polkit-gnome sú preč** a Hyprland sa konfiguruje v Lua.
-Migrácia nechala staré `.conf` súbory na disku, ale vygenerovala prázdne `.lua` šablóny —
-takže všetko nižšie bolo treba preniesť ručne.
+The upgrade from Omarchy 3.8.4 to 4.0.2 replaced the whole shell with Quickshell. **Waybar, Walker,
+Mako, SwayOSD, hyprlock, hypridle, swaybg and polkit-gnome are gone**, and Hyprland is configured in
+Lua. The migration left the old `.conf` files on disk but generated empty `.lua` templates — so
+everything below had to be ported by hand.
 
 ### Hyprland: `.conf` → `.lua`
 
-| Súbor | Čo obsahuje |
+| File | What it holds |
 |---|---|
-| `hypr/.config/hypr/monitors.lua` | 3 monitory s explicitnými pozíciami (eDP-1 \| HDMI-A-1 \| DP-2) |
-| `hypr/.config/hypr/bindings.lua` | vim navigácia (h/j/k/l + kurzorové), launchery, swap `SUPER+SPACE` ↔ `SUPER+ALT+SPACE` |
+| `hypr/.config/hypr/monitors.lua` | 3 monitors with explicit positions (eDP-1 \| HDMI-A-1 \| DP-2) |
+| `hypr/.config/hypr/bindings.lua` | vim navigation (h/j/k/l + arrow keys), launchers, swap `SUPER+SPACE` ↔ `SUPER+ALT+SPACE` |
 | `hypr/.config/hypr/input.lua` | `accel_profile = flat`, `repeat_delay = 600` |
-| `hypr/.config/hypr/hyprland.lua` | veľkosť kurzora (`XCURSOR_SIZE` + `HYPRCURSOR_SIZE`) |
+| `hypr/.config/hypr/hyprland.lua` | cursor size (`XCURSOR_SIZE` + `HYPRCURSOR_SIZE`) |
 
-> ⚠️ **Pozície monitorov sú explicitné zámerne.** Panel Display (`SUPER+CTRL+D`) posiela pri
-> zmene scale `position = "auto"`, čím Hyprland prehodí poradie monitorov. Preto je v `bin`
-> balíku skript `omarchy-monitor-scale-keep-layout`, ktorý scale zmení, poradie zachová a
-> výsledok zapíše do `monitors.lua`. Klon pluginu `marek.monitor` volá jeho namiesto
-> systémového `omarchy-hyprland-monitor-scaling`. Ak sa layout aj tak rozsype: `hyprctl reload`.
+> ⚠️ **The monitor positions are explicit on purpose.** The Display panel (`SUPER+CTRL+D`) sends
+> `position = "auto"` when the scale changes, which makes Hyprland reshuffle the monitor order. That
+> is why the `bin` package ships the `omarchy-monitor-scale-keep-layout` script, which changes the
+> scale, preserves the order, and writes the result into `monitors.lua`. The `marek.monitor` plugin
+> clone calls it instead of the system's `omarchy-hyprland-monitor-scaling`. If the layout falls
+> apart anyway: `hyprctl reload`.
 
-### Veľkosť kurzora — pozor na dostupné veľkosti
+### Cursor size — mind which sizes exist
 
-Adwaita má bitmapy len pre **24, 30, 36, 48, 72, 96**. Iná hodnota sa zaokrúhli na najbližšiu
-(28 → 24, 32 → 36), takže sa zdá, že sa nič nezmenilo. Aktuálne nastavené **36** na troch
-miestach — dve v `hyprland.lua` a jedno v gsettings, ktoré **nie je súbor** a stow ho nepokrýva:
+Adwaita only ships bitmaps for **24, 30, 36, 48, 72, 96**. Any other value is rounded to the nearest
+one (28 → 24, 32 → 36), so it looks as if nothing changed. Currently set to **36** in three places —
+two in `hyprland.lua` and one in gsettings, which is **not a file** and so is not covered by stow:
 
 ```bash
 gsettings set org.gnome.desktop.interface cursor-size 36
 ```
 
-Aplikovať bez odhlásenia (appky spustené cez uwsm čítajú systemd user environment, nie Hyprland):
+To apply it without logging out (apps started through uwsm read the systemd user environment, not Hyprland):
 
 ```bash
 hyprctl setcursor default 36
 systemctl --user set-environment XCURSOR_SIZE=36 HYPRCURSOR_SIZE=36
 ```
 
-### Klony pluginov shellu
+### Shell plugin clones
 
-Vlastné úpravy shellu nikdy nepatria do `/usr/share/omarchy/` — prepíše ich update. Namiesto
-toho `omarchy plugin clone <id>`, čo vytvorí kópiu v `~/.config/omarchy/plugins/`:
+Custom shell changes never belong in `/usr/share/omarchy/` — an update overwrites them. Use
+`omarchy plugin clone <id>` instead, which creates a copy in `~/.config/omarchy/plugins/`:
 
-- **`marek.monitor`** (klon `omarchy.monitor`) — scale nerozhodí poradie monitorov;
-  enable/disable displeja používa `hyprctl eval` namiesto `hyprctl keyword`, ktorý Hyprland
-  pod Lua parserom odmieta (upstream je tam no-op).
-- **`marek.agents`** (klon `omarchy.agents`) — v bare zobrazuje logo Claude namiesto ikony
-  robota a obe percentá vedľa seba: `4% / 48%` = session (5h) / týždenný limit. Upstream
-  ukazuje cez `bindingWindow()` len to plnšie okno, takže nízka session sa schovala za vyšší
-  týždenný limit. Chýbajúce okno drží svoje miesto ako `–%` — Claude prestane session limit
-  posielať vždy, keď vyprší uložené prihlásenie (vtedy pomôže `claude auth login`).
-  Detail a čas resetu sú v tooltipe.
+- **`marek.monitor`** (clone of `omarchy.monitor`) — changing the scale no longer reshuffles the
+  monitor order; enabling/disabling a display uses `hyprctl eval` instead of `hyprctl keyword`,
+  which Hyprland rejects under the Lua parser (upstream is a no-op there).
+- **`marek.agents`** (clone of `omarchy.agents`) — shows the Claude logo in the bar instead of the
+  robot icon, and both percentages side by side: `4% / 48%` = session (5h) / weekly limit. Upstream
+  goes through `bindingWindow()` and shows only the fuller window, so a low session percentage hid
+  behind the higher weekly one. A missing window keeps its slot as `–%` — Claude stops reporting the
+  session limit whenever the saved sign-in expires (`claude auth login` fixes it). Details and reset
+  times are in the tooltip.
 
-> Po úprave `.qml` v klone treba `omarchy restart shell` — samotný hot-reload ponechá v bare
-> starú instanciu komponentu.
+> After editing a `.qml` file in a clone you need `omarchy restart shell` — hot-reload on its own
+> leaves the old instance of the component in the bar.
 
-### Čo nie je v stow balíkoch
+### What is not in the stow packages
 
-- **gsettings** (`cursor-size`) — dconf, nie súbor; viď príkaz vyššie.
-- **`/etc` súbory z `mx-master`** — treba `sudo stow -t / mx-master`. Ak tam už reálne súbory
-  sú, stow zahlási konflikt; najprv ich zmazať (`sudo rm`), potom stowovať.
-- **`logid`** — binárka je manuálny build v `/usr/local/bin/logid`, nie pacman balík.
-- **`mx-scroll`** — inštaluje sa kopírovaním (`sudo bash mx-scroll/install.sh`), nie stowom.
-  `sudo` ignoruje všetko v `/etc/sudoers.d`, čo nie je regulárny root súbor, takže symlink by
-  ticho zabil NOPASSWD pravidlo; a `mx-scroll-mode` cez to pravidlo beží ako root, takže symlink
-  do tohto (užívateľsky zapisovateľného) repa by z neho spravil cestu k rootu.
-- **`~/.config/omarchy/bar/scripts/`, `extensions/omarchy-menu.jsonc`, `hooks/`** — zostali
-  netrackované, sú to staršie vlastné úpravy mimo tohto upgradu.
+- **gsettings** (`cursor-size`) — dconf, not a file; see the command above.
+- **`/etc` files from `mx-master`** — these need `sudo stow -t / mx-master`. If real files are
+  already there, stow reports a conflict; delete them first (`sudo rm`), then stow.
+- **`logid`** — the binary is a manual build in `/usr/local/bin/logid`, not a pacman package.
+- **`mx-scroll`** — installed by copying (`sudo bash mx-scroll/install.sh`), not by stow.
+  `sudo` ignores anything in `/etc/sudoers.d` that is not a regular root-owned file, so a symlink
+  would silently kill the NOPASSWD rule; and `mx-scroll-mode` runs as root through that rule, so a
+  symlink into this (user-writable) repo would turn it into a path to root.
+- **`~/.config/omarchy/bar/scripts/`, `extensions/omarchy-menu.jsonc`, `hooks/`** — left untracked;
+  they are older custom changes unrelated to this upgrade.
 
-## 🖥️ Tmux skratky (ZSA Voyager)
+## 🖥️ Tmux shortcuts (ZSA Voyager)
 
-Keďže ZSA Voyager nemá spoľahlivo dostupný fyzický Alt, správa okien a panelov v tmuxe beží cez no-prefix (`bind -n`) skratky namapované na klávesových vrstvách Voyageru namiesto klasického tmux prefixu (`Alt+s`):
+Since the ZSA Voyager has no reliably reachable physical Alt key, window and pane management in tmux runs through no-prefix (`bind -n`) shortcuts mapped onto the Voyager's key layers instead of the classic tmux prefix (`Alt+s`):
 
-| Vrstva + klávesa | Posiela | tmux akcia |
+| Layer + key | Sends | tmux action |
 |---|---|---|
-| Vrstva 3 (Hold Spc) + **H** | `Ctrl+Shift+Tab` | Predchádzajúce okno |
-| Vrstva 3 (Hold Spc) + **L** | `Ctrl+Tab` | Ďalšie okno |
-| Vrstva 3 (Hold Spc) + **T** | `Ctrl+Alt+T` | Nové okno |
-| Vrstva 3 (Hold Spc) + **S** | `Ctrl+Alt+S` | Split vedľa seba `│` |
-| Vrstva 3 (Hold Spc) + **V** | `Ctrl+Alt+V` | Split pod seba `─` |
-| Vrstva 3 (Hold Spc) + **C** | `Ctrl+Alt+C` | Zavrieť panel |
-| Vrstva 3 (Hold Spc) + **X** | `Ctrl+Alt+X` | Zavrieť okno |
-| Vrstva 3 (Hold Spc) + **R** | `Ctrl+Alt+R` | Premenovať aktuálne okno (prázdny prompt, netreba mazať starý názov) |
-| Vrstva 2 (Control) + **/** | `Ctrl+Shift+F12` | Zoom panelu (fullscreen toggle, rovnaká skratka ako v JetBrains) |
+| Layer 3 (Hold Spc) + **H** | `Ctrl+Shift+Tab` | Previous window |
+| Layer 3 (Hold Spc) + **L** | `Ctrl+Tab` | Next window |
+| Layer 3 (Hold Spc) + **T** | `Ctrl+Alt+T` | New window |
+| Layer 3 (Hold Spc) + **S** | `Ctrl+Alt+S` | Split side by side `│` |
+| Layer 3 (Hold Spc) + **V** | `Ctrl+Alt+V` | Split stacked `─` |
+| Layer 3 (Hold Spc) + **C** | `Ctrl+Alt+C` | Close pane |
+| Layer 3 (Hold Spc) + **X** | `Ctrl+Alt+X` | Close window |
+| Layer 3 (Hold Spc) + **R** | `Ctrl+Alt+R` | Rename the current window (empty prompt, no need to clear the old name) |
+| Layer 2 (Control) + **/** | `Ctrl+Shift+F12` | Zoom pane (fullscreen toggle, same shortcut as in JetBrains) |
 
-Zodpovedajúce väzby sú v `tmux/.tmux.conf`.
+The matching bindings live in `tmux/.tmux.conf`.
 
-### Ukladanie a obnova rozloženia session (tmux-resurrect + tmux-continuum)
+### Saving and restoring the session layout (tmux-resurrect + tmux-continuum)
 
-- **Manuálne uložiť:** `Prefix + Ctrl+s`
-- **Manuálne obnoviť:** `Prefix + Ctrl+r`
-- **Automaticky:** `@continuum-restore` je zapnuté, takže sa posledné uložené rozloženie obnoví samo pri každom novom štarte tmux servera (napr. po reštarte PC). Continuum navyše priebežne ukladá stav na pozadí, takže netreba pamätať na manuálne ukladanie.
+- **Save manually:** `Prefix + Ctrl+s`
+- **Restore manually:** `Prefix + Ctrl+r`
+- **Automatically:** `@continuum-restore` is enabled, so the last saved layout is restored by itself every time the tmux server starts (after a reboot, for example). Continuum also saves state in the background as you go, so there is nothing to remember.
 
-Na novom stroji (po `stow tmux`) treba v tmuxe raz stlačiť `Prefix + I` (veľké i), aby si TPM stiahol tieto pluginy.
+On a new machine (after `stow tmux`) press `Prefix + I` (capital i) once inside tmux so that TPM downloads these plugins.
 
-## 🐑 herdr (multiplexer pre AI agentov)
+## 🐑 herdr (multiplexer for AI agents)
 
-[herdr](https://herdr.dev) je alternatíva k tmuxu, ktorá v bočnom paneli ukazuje stav každého AI agenta (`working` / `blocked` / `done` / `idle`). Skúšobná inštalácia popri tmuxe - tmux zostáva nedotknutý, dá sa kedykoľvek vrátiť.
+[herdr](https://herdr.dev) is an alternative to tmux that shows each AI agent's state in a side panel (`working` / `blocked` / `done` / `idle`). Installed on a trial basis alongside tmux - tmux stays untouched and I can switch back at any time.
 
-**Inštalácia binárky** (nie je súčasťou stow balíka):
+**Installing the binary** (not part of the stow package):
 
 ```bash
 curl -fsSL https://herdr.dev/install.sh | sh   # -> ~/.local/bin/herdr
-# alebo cez AUR: yay -S herdr-bin
+# or from the AUR: yay -S herdr-bin
 ```
 
-**Stow - POZOR, treba `--no-folding`:**
+**Stow - CAREFUL, you need `--no-folding`:**
 
 ```bash
 stow --no-folding herdr
 ```
 
-Bez `--no-folding` stow zlinkuje celý adresár `~/.config/herdr` do repa a herdr si doň potom zapisuje logy (`herdr.log`, `herdr-server.log`, `plugins.json`). S `--no-folding` je symlink len na `config.toml` a runtime súbory zostanú mimo gitu. To isté platí pri hromadnom `stow */`.
+Without `--no-folding`, stow links the whole `~/.config/herdr` directory into the repo and herdr then writes its logs there (`herdr.log`, `herdr-server.log`, `plugins.json`). With `--no-folding` only `config.toml` is symlinked and the runtime files stay out of git. The same applies to a bulk `stow */`.
 
-**Skratky Voyageru sú rovnaké ako v tmuxe** - `config.toml` zrkadlí živé tmux väzby:
+**The Voyager shortcuts are the same as in tmux** - `config.toml` mirrors the live tmux bindings:
 
-| Vrstva + klávesa | Posiela | herdr akcia |
+| Layer + key | Sends | herdr action |
 |---|---|---|
-| Vrstva 3 (Hold Spc) + **H** | `Ctrl+Shift+Tab` | Predchádzajúci tab |
-| Vrstva 3 (Hold Spc) + **L** | `Ctrl+Tab` | Ďalší tab |
-| Vrstva 3 (Hold Spc) + **T** | `Ctrl+Alt+T` | Nový tab |
-| Vrstva 3 (Hold Spc) + **S** | `Ctrl+Alt+S` | Split vedľa seba `│` (`split_vertical`) |
-| Vrstva 3 (Hold Spc) + **V** | `Ctrl+Alt+V` | Split pod seba `─` (`split_horizontal`) |
-| Vrstva 3 (Hold Spc) + **C** | `Ctrl+Alt+C` | Zavrieť panel |
-| Vrstva 3 (Hold Spc) + **X** | `Ctrl+Alt+X` | Zavrieť tab |
-| Vrstva 3 (Hold Spc) + **R** | `Ctrl+Alt+R` | Premenovať tab |
-| Vrstva 2 (Control) + **/** | `Ctrl+Shift+F12` | Zoom panelu |
+| Layer 3 (Hold Spc) + **H** | `Ctrl+Shift+Tab` | Previous tab |
+| Layer 3 (Hold Spc) + **L** | `Ctrl+Tab` | Next tab |
+| Layer 3 (Hold Spc) + **T** | `Ctrl+Alt+T` | New tab |
+| Layer 3 (Hold Spc) + **S** | `Ctrl+Alt+S` | Split side by side `│` (`split_vertical`) |
+| Layer 3 (Hold Spc) + **V** | `Ctrl+Alt+V` | Split stacked `─` (`split_horizontal`) |
+| Layer 3 (Hold Spc) + **C** | `Ctrl+Alt+C` | Close pane |
+| Layer 3 (Hold Spc) + **X** | `Ctrl+Alt+X` | Close tab |
+| Layer 3 (Hold Spc) + **R** | `Ctrl+Alt+R` | Rename tab |
+| Layer 2 (Control) + **/** | `Ctrl+Shift+F12` | Zoom pane |
 
-Prefix je `Ctrl+Space` (rovnako ako v tmuxe; herdr nepodporuje sekundárny prefix, takže `Ctrl+b` odpadá).
+The prefix is `Ctrl+Space` (same as in tmux; herdr has no secondary prefix, so `Ctrl+b` is out).
 
-**Užitočné príkazy:**
+**Useful commands:**
 
 ```bash
-herdr config check          # validácia config.toml (hlási aj neznáme kľúče)
-herdr server reload-config  # reload bez reštartu (alebo Prefix+q)
-herdr config reset-keys     # záloha configu + zmazanie vlastných skratiek
+herdr config check          # validate config.toml (also reports unknown keys)
+herdr server reload-config  # reload without a restart (or Prefix+q)
+herdr config reset-keys     # back up the config and drop custom shortcuts
 ```
 
-Pri chybe v `config.toml` herdr **potichu spadne na defaultné skratky** - preto po každej úprave spusti `herdr config check`.
+On an error in `config.toml` herdr **silently falls back to the default shortcuts** - so run `herdr config check` after every edit.
 
-## 🚀 Inštalácia
+## 🚀 Installation
 
-### Predpoklady
+### Prerequisites
 
-Najprv si nainštaluj GNU Stow:
+First install GNU Stow:
 
 ```bash
 # Arch Linux
@@ -199,7 +200,7 @@ sudo apt install stow
 sudo dnf install stow
 ```
 
-### Klonovanie repozitára
+### Cloning the repository
 
 ```bash
 cd ~
@@ -207,115 +208,115 @@ git clone https://github.com/Maclogger/marekove-dotfiles.git
 cd marekove-dotfiles
 ```
 
-### Použitie Stow
+### Using Stow
 
-GNU Stow vytvorí symbolické linky z tohto repozitára do tvojho domovského adresára. Je to bezpečné a jednoduché!
+GNU Stow creates symlinks from this repository into your home directory. It's safe and simple!
 
-**Nainštalovať všetky konfigurácie:**
+**Install every config:**
 
 ```bash
 stow */
 ```
 
-**Nainštalovať konkrétnu konfiguráciu:**
+**Install one specific config:**
 
 ```bash
-# Napríklad len nvim
+# For example, just nvim
 stow nvim
 
-# Alebo len bashrc a tmux
+# Or just bashrc and tmux
 stow bashrc tmux
 ```
 
-**Odinštalovať konfiguráciu:**
+**Uninstall a config:**
 
 ```bash
-# Odstráni symbolické linky
+# Removes the symlinks
 stow -D nvim
 ```
 
-## 🎓 Ako Stow funguje?
+## 🎓 How does Stow work?
 
-GNU Stow je super jednoduchý! Keď spustíš `stow nvim`, vytvorí symbolické linky:
+GNU Stow is dead simple! When you run `stow nvim`, it creates symlinks:
 
 ```
 ~/marekove-dotfiles/nvim/.config/nvim  →  ~/.config/nvim
 ```
 
-Vďaka tomu:
-- 📝 Editovať môžeš súbory priamo v repozitári
-- 🔄 Zmeny sú hneď aktívne
-- 💾 Môžeš ich jednoducho commitnúť do Gitu
-- 🎯 Žiadne manuálne kopírovanie súborov
+Which means:
+- 📝 You can edit the files directly in the repository
+- 🔄 Changes take effect immediately
+- 💾 You can commit them to Git easily
+- 🎯 No manual file copying
 
-## 🛡️ Bezpečnostné tipy
+## 🛡️ Safety tips
 
-1. **Vždy si urob backup pred prvým použitím:**
+1. **Always make a backup before the first run:**
    ```bash
    mkdir ~/dotfiles-backup
    cp -r ~/.config ~/dotfiles-backup/
    cp ~/.bashrc ~/dotfiles-backup/
    ```
 
-2. **Skontroluj konflikty** - ak už máš existujúce dotfiles, Stow ťa upozorní a nevytvorí linky
+2. **Check for conflicts** - if you already have dotfiles, Stow warns you and does not create the links
 
-3. **Testuj najprv na jednej konfigurácii:**
+3. **Test on a single config first:**
    ```bash
-   stow bashrc  # Začni niečím jednoduchým
+   stow bashrc  # Start with something simple
    ```
 
-## 🔄 Aktualizácia konfigurácií
+## 🔄 Updating the configs
 
 ```bash
 cd ~/marekove-dotfiles
-git pull  # Stiahni najnovšie zmeny
+git pull  # Fetch the latest changes
 ```
 
-Vďaka symbolickým linkom sú zmeny aktívne okamžite! ⚡
+Thanks to the symlinks, changes are live immediately! ⚡
 
-## 📝 Pridávanie vlastných konfigurácií
+## 📝 Adding your own configs
 
 ```bash
 cd ~/marekove-dotfiles
 
-# Vytvor nový adresár pre konfiguráciu
-mkdir moja-app
+# Create a new directory for the config
+mkdir my-app
 
-# Presuň konfiguračný súbor tam
-mv ~/.config/moja-app ./moja-app/.config/
+# Move the config file there
+mv ~/.config/my-app ./my-app/.config/
 
-# Použi Stow
-stow moja-app
+# Use Stow
+stow my-app
 
-# Pridaj do Gitu
-git add moja-app
-git commit -m "feat: add moja-app config"
+# Add it to Git
+git add my-app
+git commit -m "feat: add my-app config"
 git push
 ```
 
-## 🤝 Prečo zdieľať dotfiles?
+## 🤝 Why share dotfiles?
 
-Aj keď sú to moje osobné konfigurácie, môžeš sa z nich inšpirovať! Dotfiles komunita je úžasná a všetci sa učíme jeden od druhého. Neváhaj si pozrieť konfigurácie a použiť čo sa ti páči. 🎨
+Even though these are my personal configs, you're welcome to take inspiration from them! The dotfiles community is wonderful and we all learn from each other. Feel free to look through the configs and use whatever you like. 🎨
 
-## 📚 Užitočné odkazy
+## 📚 Useful links
 
-- [GNU Stow dokumentácia](https://www.gnu.org/software/stow/manual/)
+- [GNU Stow documentation](https://www.gnu.org/software/stow/manual/)
 - [Arch Linux Wiki - Dotfiles](https://wiki.archlinux.org/title/Dotfiles)
-- [r/unixporn](https://www.reddit.com/r/unixporn/) - inšpirácia pre konfigurácie
+- [r/unixporn](https://www.reddit.com/r/unixporn/) - config inspiration
 - [Omarchy Linux](https://omarchy.com/)
 
-## 📄 Licencia
+## 📄 License
 
-Toto je môj osobný repozitár, ale feel free to use anything you find useful! 🎉
+This is my personal repository, but feel free to use anything you find useful! 🎉
 
-## 💡 Poznámky
+## 💡 Notes
 
-> **"The best backup is the one you actually use."** - Neznámy programátor
+> **"The best backup is the one you actually use."** - Unknown programmer
 
-Tento repozitár mi už viackrát zachránil deň. Môžem len odporučiť každému programátorovi, aby si spravil podobný systém. Nikdy nevieš, kedy ti zhavaruje disk alebo omylom zmažeš niečo dôležité! 🚨
+This repository has saved my day more than once. I can only recommend that every programmer builds a similar system. You never know when your disk will die or you'll delete something important by mistake! 🚨
 
 ---
 
 Made with ❤️ and too many cups of ☕ by Marek
 
-*P.S.: Ak si tu len pretože si omylom zmazal svoje dotfiles, vedz že nie si sám. Stalo sa to aj najlepším z nás. 😅*
+*P.S.: If you're only here because you accidentally deleted your dotfiles, know that you're not alone. It has happened to the best of us. 😅*
