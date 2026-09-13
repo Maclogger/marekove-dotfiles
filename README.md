@@ -30,9 +30,8 @@ Tento repozitár obsahuje konfigurácie pre:
 - 🔧 **jetbrains** - konfigurácie pre JetBrains IDE
 - ✏️ **nvim** - [Neovim](https://neovim.io/) konfigurácia
 - 🖥️ **tmux** - terminálový multiplexer
-- 📊 **waybar** - status bar pre Wayland (⚠️ Omarchy 4 waybar uz nepouziva - viď sekciu o Quattro)
-- 🎨 **omarchy** - Omarchy shell: `shell.json` (layout baru), `shell.toml` (velkost fontu),
-  vlastne klony pluginov v `plugins/` a user template pre farby waybaru
+- 🎨 **omarchy** - Omarchy shell: `shell.json` (layout baru), `shell.toml` (velkost fontu)
+  a vlastne klony pluginov v `plugins/`
 - 🦶 **foot** - terminal foot (default od Omarchy 4), vratane `Ctrl+Backspace` = zmazat slovo
 - 🧰 **bin** - vlastne skripty v `~/.local/bin`
 - ⌨️ **xkb** - rozloženie klávesnice
@@ -89,8 +88,12 @@ toho `omarchy plugin clone <id>`, čo vytvorí kópiu v `~/.config/omarchy/plugi
 - **`marek.monitor`** (klon `omarchy.monitor`) — scale nerozhodí poradie monitorov;
   enable/disable displeja používa `hyprctl eval` namiesto `hyprctl keyword`, ktorý Hyprland
   pod Lua parserom odmieta (upstream je tam no-op).
-- **`marek.agents`** (klon `omarchy.agents`) — v bare zobrazuje percento využitia limitu
-  a logo Claude namiesto ikony robota; detail v tooltipe.
+- **`marek.agents`** (klon `omarchy.agents`) — v bare zobrazuje logo Claude namiesto ikony
+  robota a obe percentá vedľa seba: `4% / 48%` = session (5h) / týždenný limit. Upstream
+  ukazuje cez `bindingWindow()` len to plnšie okno, takže nízka session sa schovala za vyšší
+  týždenný limit. Chýbajúce okno drží svoje miesto ako `–%` — Claude prestane session limit
+  posielať vždy, keď vyprší uložené prihlásenie (vtedy pomôže `claude auth login`).
+  Detail a čas resetu sú v tooltipe.
 
 > Po úprave `.qml` v klone treba `omarchy restart shell` — samotný hot-reload ponechá v bare
 > starú instanciu komponentu.
@@ -107,48 +110,6 @@ toho `omarchy plugin clone <id>`, čo vytvorí kópiu v `~/.config/omarchy/plugi
   do tohto (užívateľsky zapisovateľného) repa by z neho spravil cestu k rootu.
 - **`~/.config/omarchy/bar/scripts/`, `extensions/omarchy-menu.jsonc`, `hooks/`** — zostali
   netrackované, sú to staršie vlastné úpravy mimo tohto upgradu.
-
-## 🎨 Waybar farby podľa Omarchy témy
-
-Waybar nemá hardcoded farby — ťahá si ich z práve nastavenej Omarchy témy, takže po `omarchy theme set <nazov>` sa prebarví spolu s celým systémom.
-
-Ako to funguje:
-
-1. Každá Omarchy téma má `colors.toml` (accent, foreground, background, ANSI `color0`–`color15`).
-2. Tento repozitár dodáva user template `omarchy/.config/omarchy/themed/waybar-palette.css.tpl`. Omarchy pri každom `omarchy theme set` prerenderuje placeholdery `{{ color4 }}` a pod. a výsledok zapíše do `~/.config/omarchy/current/theme/waybar-palette.css`.
-3. `waybar/.config/waybar/style.css` si tento súbor importuje a moduly potom používajú len premenné (`@color4`, `@accent`, `@background`).
-
-Mapovanie modulov na farby témy:
-
-| Modul | Farba |
-|-------|-------|
-| cpu | `@color4` (modrá) |
-| memory | `@color5` (magenta) |
-| disk | `@color6` (cyan) |
-| temperature | `@color3` (žltá), nad 85 °C `@color1` |
-| archicon | pozadie `@background`, ikona `@accent` |
-| clock | `@color2` (zelená) |
-| pulseaudio | `@color7`, mute `@color0` |
-| network | `@color6`, offline `@color0` |
-| bluetooth | `@color4`, vypnuté `@color0` |
-| battery | `@color2`, pod 20 % `@color3`, pod 10 % `@color1` + blikanie |
-| custom/claudebar | farbí si text sám (číta ten istý `colors.toml`), pozadie `@background` ako archicon |
-
-Text v každom module je `@background`, takže sa automaticky prevracia — na tmavých témach tmavý text na svetlej „pilulke", na svetlých témach (Catppuccin Latte, White) naopak.
-
-> ⚠️ Template sa vyhodnocuje **len pri `omarchy theme set`**. Po zmene `.tpl` súboru treba znovu nastaviť aktuálnu tému, aby sa paleta pregenerovala:
-> ```bash
-> OMARCHY_THEME_SKIP_BACKGROUND=1 omarchy theme set "$(omarchy theme current)"
-> ```
-> (`OMARCHY_THEME_SKIP_BACKGROUND=1` zabráni preblikaniu tapety na ďalšiu v poradí.)
-
-Zámerne sa súbor menuje `waybar-palette.css` a nie `waybar.css` — niektoré témy (Catppuccin, Lumon, Retro 82) si dodávajú vlastný `waybar.css`, ktorý by template prebil.
-
-## 🤖 Waybar modul: Claude usage
-
-`custom/claudebar` zobrazuje aktuálne využitie 5-hodinového session limitu Claude (percento + countdown do resetu), tooltip pridáva aj týždenný limit a progress bary. Používa [claudebar](https://github.com/mryll/claudebar) — nezávislý AUR balíček (`yay -S claudebar`), ktorý číta OAuth token z `~/.claude/.credentials.json` a volá oficiálny (ale nedokumentovaný) endpoint `api.anthropic.com/api/oauth/usage` — teda skutočné dáta z Anthropic účtu, nie odhad z lokálnych logov. Farby si ťahá sám z `~/.config/omarchy/current/theme/colors.toml`, takže sa prebarvuje spolu s ostatnými modulmi.
-
-Interval je zámerne 300s — endpoint má prísny rate limit, pri kratšom pollingu hádže 429 (viď [claude-code#30930](https://github.com/anthropics/claude-code/issues/30930)); claudebar má vlastný 60s cache a pri zlyhaní ukáže `⏸` so starými dátami.
 
 ## 🖥️ Tmux skratky (ZSA Voyager)
 
