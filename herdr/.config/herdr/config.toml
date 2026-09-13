@@ -1,3 +1,4 @@
+onboarding = false
 # herdr config — keybindings mirrored from the live tmux setup
 #
 # Source of truth: the *running* tmux server's key tables, captured with
