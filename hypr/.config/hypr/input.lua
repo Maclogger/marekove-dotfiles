@@ -14,6 +14,20 @@ hl.config({
 	},
 })
 
+-- Caps Lock acts as Escape.
+-- The ZSA Voyager did this in its own firmware, so it kept working after the
+-- Omarchy 4 migration dropped the `kb_options = caps:escape` line from the old
+-- input.conf -- but only on that keyboard. Setting it here makes it apply to
+-- every keyboard, the laptop's built-in one included.
+-- This replaces Omarchy's default `compose:caps`, so Caps is no longer the
+-- compose key. `shift:both_capslock_cancel` is kept from the default: both
+-- Shifts together still toggle Caps Lock, and a lone Shift clears it again.
+hl.config({
+	input = {
+		kb_options = "caps:escape,shift:both_capslock_cancel",
+	},
+})
+
 -- Keyboard layout and options.
 -- See https://wiki.hypr.land/Configuring/Basics/Variables/#input
 -- hl.config({
