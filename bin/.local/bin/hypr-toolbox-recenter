@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Keep the JetBrains Toolbox window on screen.
+#
+# Every time Toolbox is shown it moves itself next to where it thinks the tray
+# icon is, which on this monitor layout is off-screen (x = -952, left of eDP-1).
+# It does that after mapping, so a Hyprland window rule (center = true) is
+# overridden immediately. Instead, listen for the window opening and center it
+# whenever its top-left corner ends up outside every monitor.
+#
+# Started from hypr/autostart.lua.
+
+set -u
+
+socket="$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
+
+recenter_if_offscreen() {
+  local addr="0x$1"
+  # Toolbox may reposition itself a moment after mapping, so check a few times.
+  for delay in 0.1 0.2 0.4 0.8; do
+    sleep "$delay"
+    local offscreen
+    offscreen=$(jq -n --arg addr "$addr" \
+      --argjson clients "$(hyprctl clients -j)" \
+      --argjson monitors "$(hyprctl monitors -j)" '
+      ($clients[] | select(.address == $addr) | .at) as [$x, $y]
+      | [$monitors[]
+         | select($x >= .x and $y >= .y
+                  and $x < .x + .width / .scale and $y < .y + .height / .scale)]
+      | length == 0')
+    if [[ $offscreen == true ]]; then
+      hyprctl dispatch "hl.dsp.window.center({ window = \"address:$addr\" })" >/dev/null
+    fi
+  done
+}
+
+socat -U - "UNIX-CONNECT:$socket" | while IFS= read -r line; do
+  # openwindow>>ADDRESS,WORKSPACE,CLASS,TITLE
+  [[ $line == openwindow\>\>* ]] || continue
+  IFS=, read -r addr _ class _ <<<"${line#openwindow>>}"
+  [[ $class == jetbrains-toolbox ]] && recenter_if_offscreen "$addr" &
+done
