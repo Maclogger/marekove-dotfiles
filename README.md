@@ -104,7 +104,16 @@ Custom shell changes never belong in `/usr/share/omarchy/` — an update overwri
 - **gsettings** (`cursor-size`) — dconf, not a file; see the command above.
 - **`/etc` files from `mx-master`** — these need `sudo stow -t / mx-master`. If real files are
   already there, stow reports a conflict; delete them first (`sudo rm`), then stow.
-- **`logid`** — the binary is a manual build in `/usr/local/bin/logid`, not a pacman package.
+- **`logid`** — the binary is a manual build in `/usr/bin/logid` (upstream hard-codes the `/usr` prefix), not a pacman package.
+  It is built from the `continuous-gestures` branch of `~/logiops` (upstream
+  [PixlOne/logiops](https://github.com/PixlOne/logiops) + two commits): after each `OnInterval`
+  gesture step, the current position becomes the new origin, so holding the thumb button and
+  moving left/right steps through workspaces back and forth like Logi Options+ on Windows,
+  without double steps from wobble. It also adds `first_interval` (distance for the first
+  step of a press; later steps use `interval`). Rebuild: `cd ~/logiops/build && cmake .. && make`, then
+  `sudo make install && sudo systemctl restart logid`. To update, rebase the branch onto
+  `origin/main`. Note: the `haptic_*` keys in `logid.cfg` are ignored by upstream
+  (haptics are only in the unmerged PR #524).
 - **`mx-scroll`** — installed by copying (`sudo bash mx-scroll/install.sh`), not by stow.
   `sudo` ignores anything in `/etc/sudoers.d` that is not a regular root-owned file, so a symlink
   would silently kill the NOPASSWD rule; and `mx-scroll-mode` runs as root through that rule, so a
