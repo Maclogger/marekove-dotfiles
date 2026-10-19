@@ -105,3 +105,18 @@ o.bind("CTRL + ALT + SHIFT + U", "Background switcher", "omarchy-menu toggle bac
 -- notifies which mode is now live.
 o.bind("CTRL + ALT + SHIFT + P", "Toggle MX Master smooth scroll",
   "/home/marek/.local/bin/mx-scroll-toggle")
+
+-- The MX Master 4's new button holds SUPER (for SUPER + drag move/resize)
+-- and turns movement into media keys, so they arrive with SUPER held (see
+-- mx-master/etc/logid.cfg): tap = play/pause, up/down = volume, 4 % per
+-- step, left/right = previous/next track.
+o.bind("SUPER + XF86AudioPlay", "Play/pause (MX Master button)",
+  "omarchy-shell media playPause", { locked = true })
+o.bind("SUPER + XF86AudioRaiseVolume", "Volume up (MX Master button)",
+  "omarchy-audio-output-volume +4", { locked = true, repeating = true })
+o.bind("SUPER + XF86AudioLowerVolume", "Volume down (MX Master button)",
+  "omarchy-audio-output-volume -4", { locked = true, repeating = true })
+o.bind("SUPER + XF86AudioPrev", "Previous track (MX Master button)",
+  "omarchy-shell media previous", { locked = true })
+o.bind("SUPER + XF86AudioNext", "Next track (MX Master button)",
+  "omarchy-shell media next", { locked = true })

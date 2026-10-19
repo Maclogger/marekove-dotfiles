@@ -117,6 +117,12 @@ Custom shell changes never belong in `/usr/share/omarchy/` — an update overwri
   `OnInterval` / `OnRelease` / `OnThreshold` gestures — an interval gesture ticks on every step.
   Plain upstream logid ignores all `haptic_*` keys. To pick an effect by feel, run
   `mx-haptic-test [STRENGTH]` (from `bin`; asks for sudo, Enter = next effect, `q` = quit).
+  The new button (`cid 0xc3`) uses two more additions, `hold_keys` and
+  `mouse_button_passthrough`: it holds SUPER the whole time, so SUPER + left/right drag still
+  moves/resizes windows (logid reads the mouse's evdev node and passes movement to the cursor
+  while a mouse button is held). On its own, a tap is play/pause, up/down movement changes
+  the volume (4 % per step) and left/right skips tracks — `SUPER + XF86Audio*` binds in
+  `hypr/bindings.lua`.
 - **`mx-scroll`** — installed by copying (`sudo bash mx-scroll/install.sh`), not by stow.
   `sudo` ignores anything in `/etc/sudoers.d` that is not a regular root-owned file, so a symlink
   would silently kill the NOPASSWD rule; and `mx-scroll-mode` runs as root through that rule, so a
