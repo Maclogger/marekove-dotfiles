@@ -1,4 +1,5 @@
 <keymap version="1" name="MyConfig" parent="Default for GNOME">
+  <action id="ActivateBookmarksToolWindow" />
   <action id="ActivateCommitToolWindow">
     <keyboard-shortcut first-keystroke="alt 0" />
     <keyboard-shortcut first-keystroke="ctrl g" />
