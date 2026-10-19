@@ -1,0 +1,140 @@
+#!/usr/bin/env python3
+"""
+mx-haptic-test — try every haptic effect of the MX Master 4.
+
+Plays the effects one by one so a haptic_effect for logid.cfg can be picked
+by feel. Talks HID++ (feature 0x19B0) to the mouse over hidraw directly, so it
+needs root; it re-runs itself through sudo when started as a normal user.
+
+Usage: mx-haptic-test [STRENGTH]
+
+STRENGTH (1-100) is applied only while the script runs; the mouse's previous
+strength is restored on exit.
+
+At each prompt:  Enter = next   r = replay   <number> = jump to that effect
+                 a = auto-play all   q = quit
+"""
+import glob
+import os
+import select
+import sys
+import time
+
+FEATURE = 0x19B0
+SWID = 0x0A
+DEV = 0xFF  # device index of a Bluetooth-connected mouse
+
+# Names as Solaar documents them (hidpp20_constants.HapticWaveForms).
+NAMES = {
+    0: 'sharp state change', 1: 'damp state change', 2: 'sharp collision',
+    3: 'damp collision', 4: 'subtle collision', 5: 'happy alert',
+    6: 'angry alert', 7: 'completed', 8: 'square', 9: 'wave',
+    10: 'firework', 11: 'mad', 12: 'knock', 13: 'jingle', 14: 'ringing',
+    27: 'whisper collision',
+}
+
+
+def find_hidraw():
+    for path in sorted(glob.glob('/sys/class/hidraw/hidraw*/device/uevent')):
+        with open(path) as f:
+            if 'HID_ID=0005:0000046D:0000B042' in f.read():
+                yield '/dev/' + path.split('/')[4]
+
+
+def request(fd, feat_idx, func, params=b''):
+    os.write(fd, (bytes([0x11, DEV, feat_idx, (func << 4) | SWID]) + params)
+             .ljust(20, b'\0'))
+    deadline = time.time() + 2
+    while time.time() < deadline:
+        if not select.select([fd], [], [], 0.2)[0]:
+            continue
+        rep = os.read(fd, 64)
+        if len(rep) < 6 or rep[0] != 0x11 or rep[1] != DEV:
+            continue
+        if rep[2] == 0xFF and rep[3] == feat_idx and rep[4] == (func << 4) | SWID:
+            raise RuntimeError(f'HID++ error {rep[5]:#x}')
+        if rep[2] == feat_idx and rep[3] == (func << 4) | SWID:
+            return rep[4:]
+    raise TimeoutError('the mouse did not answer')
+
+
+def open_mouse():
+    for dev in find_hidraw():
+        try:
+            fd = os.open(dev, os.O_RDWR)
+            idx = request(fd, 0x00, 0, FEATURE.to_bytes(2, 'big'))[0]
+        except (OSError, TimeoutError, RuntimeError):
+            continue
+        if idx:
+            return fd, idx
+        os.close(fd)
+    sys.exit('No MX Master 4 with haptic feedback answered (is it connected over Bluetooth?)')
+
+
+def main():
+    if os.geteuid() != 0:
+        os.execvp('sudo', ['sudo', sys.executable, os.path.abspath(__file__), *sys.argv[1:]])
+
+    strength = None
+    if len(sys.argv) > 1:
+        if not sys.argv[1].isdigit() or not 1 <= int(sys.argv[1]) <= 100:
+            sys.exit('usage: mx-haptic-test [STRENGTH 1-100]')
+        strength = int(sys.argv[1])
+
+    fd, idx = open_mouse()
+    caps = request(fd, idx, 0)
+    mask = int.from_bytes(caps[4:8], 'big')
+    effects = [e for e in range(32) if mask >> e & 1]
+
+    state = request(fd, idx, 1)
+    flags, level = state[0], state[1]
+    if strength is not None:
+        request(fd, idx, 2, bytes([flags | 0x01, strength]))
+    print(f'Strength {strength or level}'
+          f'{" (temporary, restored on exit)" if strength else ""}. '
+          f'Effects: {", ".join(map(str, effects))}')
+    print('Enter = next, r = replay, <number> = jump, a = auto-play all, q = quit\n')
+
+    def play(e):
+        print(f'  {e:>2}  {NAMES.get(e, "unknown")}', flush=True)
+        request(fd, idx, 4, bytes([e]))
+
+    try:
+        i = 0
+        play(effects[i])
+        while True:
+            try:
+                cmd = input('> ').strip().lower()
+            except EOFError:
+                break
+            if cmd == 'q':
+                break
+            if cmd == 'r':
+                play(effects[i])
+            elif cmd == 'a':
+                for e in effects:
+                    play(e)
+                    time.sleep(1.5)
+            elif cmd.isdigit():
+                if int(cmd) in effects:
+                    i = effects.index(int(cmd))
+                    play(effects[i])
+                else:
+                    print(f'  no effect {cmd}; choose from {effects}')
+            elif cmd == '':
+                i = (i + 1) % len(effects)
+                if i == 0:
+                    print('  (back to the first effect)')
+                play(effects[i])
+            else:
+                print('  Enter = next, r = replay, <number> = jump, a = auto-play all, q = quit')
+    except KeyboardInterrupt:
+        print()
+    finally:
+        if strength is not None:
+            request(fd, idx, 2, bytes([flags, level]))
+            print(f'Restored strength {level}.')
+
+
+if __name__ == '__main__':
+    main()
