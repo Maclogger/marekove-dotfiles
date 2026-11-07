@@ -11,3 +11,7 @@ herdr/.config/herdr/sessions/
 
 # Timestamped zálohy configov (omarchy refresh aj vlastné) - git je záloha
 *.bak.[0-9]*
+
+# voxtype: ~/.config/voxtype is linked whole (folded), because `voxtype config set`
+# replaces the file and would break a file-level symlink; it also writes this backup
+voxtype/.config/voxtype/config.toml.bak

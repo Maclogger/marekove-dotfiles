@@ -35,6 +35,9 @@ This repository contains configurations for:
 - 🦶 **foot** - the foot terminal (default since Omarchy 4), including `Ctrl+Backspace` = delete word
 - 🧰 **bin** - my own scripts in `~/.local/bin`
 - ⌨️ **xkb** - keyboard layout
+- 🎙️ **voxtype** - local voice dictation (Whisper `large-v3-turbo`, English + Slovak auto-detect,
+  5 min limit, media ducked to 20 % instead of paused). `F13` toggles, `F14` cancels — binds in
+  `hypr/bindings.lua`. Stowed as a whole directory, see below
 - 🖱️ mx-master - my Logitech MX Master 4 mouse (`sudo stow -t / mx-master`) - `logid.cfg`,
   a udev rule that restarts logid on Bluetooth connect, and a systemd override for `logid.service`
 - 🖱️ **mx-scroll** - toggle for hi-res ("smooth") scrolling on the MX Master 4, keybind `MEH + P`.
@@ -127,6 +130,12 @@ Custom shell changes never belong in `/usr/share/omarchy/` — an update overwri
   `sudo` ignores anything in `/etc/sudoers.d` that is not a regular root-owned file, so a symlink
   would silently kill the NOPASSWD rule; and `mx-scroll-mode` runs as root through that rule, so a
   symlink into this (user-writable) repo would turn it into a path to root.
+- **voxtype GPU backend** — the active backend is the `/usr/bin/voxtype` symlink, not a config
+  key. On a new machine: `sudo voxtype setup gpu --enable && systemctl --user restart voxtype`
+  (Vulkan; ~3× faster than CPU here), and download the model with
+  `voxtype setup --download --model large-v3-turbo`. The `voxtype` package must be stowed with
+  `~/.config/voxtype` absent, so stow links the whole directory: `voxtype config set` writes a
+  new file and would replace a file-level symlink with a plain copy.
 - **`~/.config/omarchy/bar/scripts/`, `extensions/omarchy-menu.jsonc`, `hooks/`** — left untracked;
   they are older custom changes unrelated to this upgrade.
 

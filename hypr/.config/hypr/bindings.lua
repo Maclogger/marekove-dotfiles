@@ -66,6 +66,12 @@ o.bind("SUPER + M", "Spotify", { launch = "spotify" })
 -- ncaron is 'ň' on the Slovak layout. Omarchy's own SUPER+CTRL+L still works.
 o.bind("CTRL + ALT + ncaron", "Lock session", "loginctl lock-session")
 
+-- Same key as SuperWhisper on Windows. xkb maps KEY_F13 to the XF86Tools
+-- keysym, so binding "F13" would never fire.
+o.bind("XF86Tools", "Toggle dictation", "voxtype record toggle")
+-- F14 (XF86Launch5) throws the recording away without typing anything.
+o.bind("XF86Launch5", "Cancel dictation", "voxtype record cancel")
+
 -- Replaces the SUPER+J default given up above.
 o.bind("CTRL + ALT + O", "Toggle window split", hl.dsp.layout("togglesplit"))
 
