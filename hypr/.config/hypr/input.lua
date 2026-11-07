@@ -28,6 +28,17 @@ hl.config({
 	},
 })
 
+-- Natural (inverse) touchpad scrolling.
+-- The old input.conf had `natural_scroll = true`, but the Omarchy 4 migration
+-- dropped it and Omarchy's default is false, which flipped the direction.
+hl.config({
+	input = {
+		touchpad = {
+			natural_scroll = true,
+		},
+	},
+})
+
 -- Keyboard layout and options.
 -- See https://wiki.hypr.land/Configuring/Basics/Variables/#input
 -- hl.config({
