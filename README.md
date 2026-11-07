@@ -125,9 +125,10 @@ Custom shell changes never belong in `/usr/share/omarchy/` — an update overwri
   The new button (`cid 0xc3`) uses two more additions, `hold_keys` and
   `mouse_button_passthrough`: it holds SUPER the whole time, so SUPER + left/right drag still
   moves/resizes windows (logid reads the mouse's evdev node and passes movement to the cursor
-  while a mouse button is held). On its own, a tap is play/pause, up/down movement changes
-  the volume (4 % per step) and left/right skips tracks — `SUPER + XF86Audio*` binds in
-  `hypr/bindings.lua`.
+  while a mouse button is held). On its own, a tap toggles dictation (`F13`, arriving as
+  `SUPER + XF86Tools`), up/down movement changes the volume (4 % per step) and left/right
+  skips tracks — `SUPER + XF86*` binds in `hypr/bindings.lua`. Play/pause is a tap of the
+  gesture (thumb) button, which sends a plain media key.
 - **`mx-scroll`** — installed by copying (`sudo bash mx-scroll/install.sh`), not by stow.
   `sudo` ignores anything in `/etc/sudoers.d` that is not a regular root-owned file, so a symlink
   would silently kill the NOPASSWD rule; and `mx-scroll-mode` runs as root through that rule, so a
