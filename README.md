@@ -36,7 +36,9 @@ This repository contains configurations for:
 - 🧰 **bin** - my own scripts in `~/.local/bin`
 - ⌨️ **xkb** - keyboard layout
 - 🎙️ **voxtype** - local voice dictation (Whisper `large-v3-turbo`, English + Slovak auto-detect,
-  5 min limit, media ducked to 20 % instead of paused). `F13` toggles, `F14` cancels — binds in
+  5 min limit, media ducked to 20 % instead of paused). Transcribes in chunks while you speak
+  (`eager_processing`) and pastes the result in one go with `Shift+Insert`, which works in foot,
+  Chrome and JetBrains; the clipboard is restored afterwards. `F13` toggles, `F14` cancels — binds in
   `hypr/bindings.lua`. Stowed as a whole directory, see below
 - 🖱️ mx-master - my Logitech MX Master 4 mouse (`sudo stow -t / mx-master`) - `logid.cfg`,
   a udev rule that restarts logid on Bluetooth connect, and a systemd override for `logid.service`

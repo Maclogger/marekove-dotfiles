@@ -56,6 +56,7 @@ language = "auto"
 # Translate non-English speech to English
 translate = false
 streaming = false
+eager_processing = true
 
 # Number of CPU threads for inference (omit for auto-detection)
 # threads = 4
@@ -64,7 +65,7 @@ streaming = false
 # Primary output mode: "type" or "clipboard"
 # - type: Simulates keyboard input at cursor position (requires ydotool)
 # - clipboard: Copies text to clipboard (requires wl-copy)
-mode = "type"
+mode = "paste"
 
 # Fall back to clipboard if typing fails
 fallback_to_clipboard = true
@@ -72,6 +73,8 @@ fallback_to_clipboard = true
 # Delay between typed characters in milliseconds
 # 0 = fastest possible, increase if characters are dropped
 type_delay_ms = 1
+paste_keys = "shift+insert"
+restore_clipboard = true
 
 # Post-processing command (optional)
 # Pipe transcribed text through an external command for cleanup before output.
