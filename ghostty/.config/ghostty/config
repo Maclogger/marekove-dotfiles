@@ -1,0 +1,70 @@
+# Ghostty — default terminal (replaced foot for image support: herdr only
+# passes images through to Kitty-graphics terminals, and foot is Sixel-only).
+#
+# Based on Omarchy's default ($OMARCHY_PATH/config/ghostty/config).
+# Ghostty is only the outer window here; tabs, splits and panes belong to herdr.
+# Reload: ctrl+shift+comma (bound below), or open a new window.
+
+# Dynamic theme colors
+config-file = ?"~/.local/state/omarchy/current/theme/ghostty.conf"
+
+# Font — same face as foot. Ghostty renders points ~1.36x larger than foot,
+# so 14.5 here matches foot's size=20 (measured: same window, 211 vs 153 columns).
+font-family = "JetBrainsMono Nerd Font"
+font-style = Regular
+font-size = 14.5
+
+# Window
+window-theme = ghostty
+window-padding-x = 14
+window-padding-y = 14
+confirm-close-surface = false
+resize-overlay = never
+gtk-toolbar-style = flat
+
+# Cursor
+cursor-style = block
+cursor-style-blink = false
+
+# Cursor styling + SSH session terminfo
+# (all shell integration options must be passed together)
+shell-integration-features = no-cursor,ssh-env
+
+# Mouse
+mouse-scroll-multiplier = 0.95
+
+# Fix general slowness on Hyprland (https://github.com/ghostty-org/ghostty/discussions/3224)
+async-backend = epoll
+
+# ---------------------------------------------------------------------------
+# Keybindings
+#
+# Drop ALL of Ghostty's default shortcuts. Its defaults grab keys that herdr
+# and the ZSA Hold-Spc layer use: ctrl+tab / ctrl+shift+tab (herdr tabs),
+# ctrl+alt+arrows (herdr pane focus), ctrl+shift+t/n/w/o/e (Ghostty's own
+# tabs and splits). Only the keys below are kept.
+# ---------------------------------------------------------------------------
+keybind = clear
+
+# Clipboard (same as foot: Ctrl+Insert / Shift+Insert, plus Ctrl+Shift+C/V)
+keybind = ctrl+shift+c=copy_to_clipboard
+keybind = ctrl+insert=copy_to_clipboard
+keybind = ctrl+shift+v=paste_from_clipboard
+keybind = shift+insert=paste_from_clipboard
+
+# Font size
+keybind = ctrl+equal=increase_font_size:1
+keybind = ctrl+plus=increase_font_size:1
+keybind = ctrl+minus=decrease_font_size:1
+keybind = ctrl+zero=reset_font_size
+
+# Reload this file
+keybind = ctrl+shift+comma=reload_config
+
+# Send Shift+Enter as CSI-u so TUIs can distinguish it from Enter.
+keybind = shift+enter=csi:13;2u
+# Legacy encoding sends Alt+Shift+Enter the same as Alt+Enter; send CSI-u so tmux can match M-S-Enter.
+keybind = alt+shift+enter=csi:13;4u
+
+# Delete word with Ctrl+Backspace (ESC DEL, same as Alt+Backspace) — ported from foot.
+keybind = ctrl+backspace=text:\x1b\x7f

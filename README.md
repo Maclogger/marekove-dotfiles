@@ -31,8 +31,18 @@ This repository contains configurations for:
 - ✏️ **nvim** - [Neovim](https://neovim.io/) configuration
 - 🖥️ **tmux** - terminal multiplexer
 - 🎨 **omarchy** - Omarchy shell: `shell.json` (bar layout), `shell.toml` (font size)
-  and my own plugin clones in `plugins/`
-- 🦶 **foot** - the foot terminal (default since Omarchy 4), including `Ctrl+Backspace` = delete word
+  and my own plugin clones in `plugins/`. `themed/starship.toml.tpl` is the Starship prompt
+  (Catppuccin Powerline preset) as an Omarchy theme template: every `omarchy theme set` re-renders it
+  with the theme's colors into `~/.local/state/omarchy/current/theme/starship.toml`, and `.bashrc`
+  points `STARSHIP_CONFIG` there
+- 👻 **ghostty** - [Ghostty](https://ghostty.org), my default terminal (replaced foot). Chosen for the
+  Kitty graphics protocol: herdr only passes images (e.g. Yazi previews) through to Kitty-graphics
+  terminals, and foot is Sixel-only. `keybind = clear` drops all Ghostty shortcuts so `Ctrl+Tab`,
+  `Ctrl+Alt+arrows` etc. reach herdr; only clipboard, font size, reload (`Ctrl+Shift+,`) and
+  `Ctrl+Backspace` = delete word are bound. Install with `omarchy-install-terminal ghostty`, stow with
+  `stow --no-folding ghostty`
+- 🦶 **foot** - the foot terminal (Omarchy 4 default, kept as a fallback:
+  `omarchy-default-terminal foot`), including `Ctrl+Backspace` = delete word
 - 🧰 **bin** - my own scripts in `~/.local/bin`
 - ⌨️ **xkb** - keyboard layout
 - 🎙️ **voxtype** - local voice dictation (Whisper `large-v3-turbo`, English + Slovak auto-detect,

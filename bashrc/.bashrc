@@ -12,6 +12,12 @@ source ~/.local/share/omarchy/default/bash/rc
 #
 # Set a custom prompt with the directory revealed (alternatively use https://starship.rs)
 # PS1="\W \[\e]0;\w\a\]$PS1"
+# Starship config follows the Omarchy theme: rendered from
+# ~/.config/omarchy/themed/starship.toml.tpl on every theme switch.
+# Falls back to ~/.config/starship.toml if the rendered file is missing.
+if [[ -f ~/.local/state/omarchy/current/theme/starship.toml ]]; then
+  export STARSHIP_CONFIG=~/.local/state/omarchy/current/theme/starship.toml
+fi
 eval "$(starship init bash)"
 
 alias sail=./vendor/bin/sail
