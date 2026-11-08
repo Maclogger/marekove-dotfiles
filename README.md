@@ -45,6 +45,8 @@ This repository contains configurations for:
 - 🖱️ **mx-scroll** - toggle for hi-res ("smooth") scrolling on the MX Master 4, keybind `MEH + P`.
   XWayland turns every hi-res scroll event into its own button 4/5 click, so in CS2 a single
   wheel detent counts as several scrolls. Installed by copying, **not by stow** - see below
+- 🔐 **sshd** - SSH server reachable only over [Tailscale](https://tailscale.com): keys only, user
+  `marek` only, ufw allows port 22 just on `tailscale0`. Installed by copying, **not by stow** - see below
 
 ## 🚀 Omarchy 4 "Quattro" — what changed
 
@@ -133,6 +135,12 @@ Custom shell changes never belong in `/usr/share/omarchy/` — an update overwri
   `sudo` ignores anything in `/etc/sudoers.d` that is not a regular root-owned file, so a symlink
   would silently kill the NOPASSWD rule; and `mx-scroll-mode` runs as root through that rule, so a
   symlink into this (user-writable) repo would turn it into a path to root.
+- **`sshd`** — installed by copying (`sudo bash sshd/install.sh`), not by stow: the sshd config must
+  be a root-owned file, since a symlink into this user-writable repo would be a path to root. The
+  script also installs Tailscale, enables `tailscaled` + `sshd` at boot and replaces Omarchy's
+  default ufw rule (`allow 22/tcp` from anywhere) with one limited to `tailscale0`. Log in to
+  Tailscale once with `sudo tailscale up --operator=marek`; then add other devices' public keys to
+  `~/.ssh/authorized_keys` (password login is off).
 - **voxtype GPU backend** — the active backend is the `/usr/bin/voxtype` symlink, not a config
   key. On a new machine: `sudo voxtype setup gpu --enable && systemctl --user restart voxtype`
   (Vulkan; ~3× faster than CPU here), and download the model with
