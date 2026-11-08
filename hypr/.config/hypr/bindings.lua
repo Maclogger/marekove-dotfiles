@@ -127,3 +127,10 @@ o.bind("SUPER + XF86AudioPrev", "Previous track (MX Master button)",
   "omarchy-shell media previous", { locked = true })
 o.bind("SUPER + XF86AudioNext", "Next track (MX Master button)",
   "omarchy-shell media next", { locked = true })
+
+-- Dictation keys from before Alt + Space and Right Alt became the defaults.
+-- Remove these lines to give the keys back to applications.
+if o.dictation_installed and o.dictation_installed() then
+  o.bind("SUPER + CTRL + X", "Toggle dictation", "omarchy-dictation toggle")
+  o.bind_hold("F9", "Start dictation (push-to-talk)", "omarchy-dictation start", "Stop dictation (push-to-talk)", "omarchy-dictation stop")
+end
