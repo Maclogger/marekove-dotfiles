@@ -184,7 +184,8 @@ style = "bg:lavender"
 format = '[[  $time ](fg:crust bg:lavender)]($style)'
 
 [line_break]
-disabled = true
+# Type on a new line under the powerline blocks (the preset keeps it on one line).
+disabled = false
 
 [character]
 disabled = false
