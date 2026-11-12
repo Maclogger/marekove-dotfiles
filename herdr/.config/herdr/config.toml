@@ -173,3 +173,54 @@ description = "resize pane down (tmux: C-M-S-Down)"
 # If that becomes a problem, drop "ctrl+h"/"ctrl+j"/"ctrl+k"/"ctrl+l" from the
 # focus_pane_* arrays above; ctrl+alt+<arrow> stays bound as a fallback.
 # ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# UI — make parallel/forked Claude sessions distinguishable at a glance.
+# Claude Code sets the terminal title to the session topic; show it in the
+# sidebar row and on split-pane borders.
+# ---------------------------------------------------------------------------
+[ui]
+show_agent_labels_on_pane_borders = true
+
+[ui.sidebar.agents.rows_by_agent]
+claude = [["state_icon", "workspace", "tab"], ["terminal_title_stripped"]]
+
+# ---------------------------------------------------------------------------
+# Fork the focused Claude session into a new pane on the right.
+# Uses the session ID that the herdr Claude integration reports for the pane
+# (`herdr pane get` → .agent_session.value) and runs
+#   claude --resume <id> --fork-session -n "⑂ <parent topic>"
+# The original keeps running untouched in its pane. If the focused pane has no
+# reported session (e.g. not a Claude pane), it falls back to the picker.
+# ---------------------------------------------------------------------------
+[[keys.command]]
+key = "prefix+f"
+type = "shell"
+description = "fork focused Claude session into a pane on the right"
+command = '''
+p=$(herdr pane list | jq -r '.result.panes[] | select(.focused) | .pane_id' | head -n1)
+info=$(herdr pane get "$p" | jq -c '.result.pane')
+sid=$(printf '%s' "$info" | jq -r '.agent_session.value // empty')
+cwd=$(printf '%s' "$info" | jq -r '.foreground_cwd // .cwd')
+title=$(printf '%s' "$info" | jq -r '.terminal_title_stripped // "claude"' | tr -d "'\"\\\\" | cut -c1-40)
+new=$(herdr pane split --pane "$p" --direction right --cwd "$cwd" --focus | jq -r '.result.pane.pane_id')
+if [ -n "$sid" ]; then
+  herdr pane run "$new" "claude --resume $sid --fork-session -n '⑂ $title'"
+else
+  herdr pane run "$new" "claude --resume --fork-session"
+fi
+'''
+
+# ---------------------------------------------------------------------------
+# Browse ALL Claude sessions (open + closed, every project) in an fzf popup.
+# Enter: focus it if already open (●), otherwise resume it in a new tab.
+# ctrl-f: fork it into a new tab instead.
+# Script lives next to this file in the dotfiles repo.
+# ---------------------------------------------------------------------------
+[[keys.command]]
+key = "prefix+a"
+type = "popup"
+description = "browse & resume Claude sessions"
+command = "python3 /home/marek/marekove-dotfiles/herdr/.config/herdr/claude-sessions.py"
+width = "90%"
+height = "80%"
