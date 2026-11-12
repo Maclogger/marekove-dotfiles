@@ -15,3 +15,6 @@ herdr/.config/herdr/sessions/
 # voxtype: ~/.config/voxtype is linked whole (folded), because `voxtype config set`
 # replaces the file and would break a file-level symlink; it also writes this backup
 voxtype/.config/voxtype/config.toml.bak
+
+# Local voice recordings used to benchmark Voxtype engines; private, never push
+voxtype/my-voice-recordings/
