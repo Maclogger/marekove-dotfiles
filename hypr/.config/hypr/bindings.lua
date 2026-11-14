@@ -112,6 +112,13 @@ o.bind("CTRL + ALT + SHIFT + U", "Background switcher", "omarchy-menu toggle bac
 o.bind("CTRL + ALT + SHIFT + P", "Toggle MX Master smooth scroll",
   "/home/marek/.local/bin/mx-scroll-toggle")
 
+-- Send the MX Master 4 to Easy-Switch channel 1/2/3 (bin/.local/bin/mx-host).
+-- Keycodes, because the Slovak layout's number row doesn't type digits.
+for channel = 1, 3 do
+  o.bind("CTRL + ALT + SHIFT + code:" .. tostring(channel + 9), "MX Master to device " .. channel,
+    "/home/marek/.local/bin/mx-host switch " .. channel)
+end
+
 -- The MX Master 4's new button holds SUPER (for SUPER + drag move/resize)
 -- and turns movement into media keys, so they arrive with SUPER held (see
 -- mx-master/etc/logid.cfg): tap = F13 (toggle dictation), up/down = volume,

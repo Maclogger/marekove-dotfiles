@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "marek.mxhost",
+  "name": "MX Master Easy-Switch",
+  "version": "1.0.0",
+  "author": "marek",
+  "description": "Shows which computer the MX Master 4 is on and switches its Easy-Switch channel",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "MX Master Easy-Switch",
+    "description": "Shows which computer the MX Master 4 is on and switches its Easy-Switch channel",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}

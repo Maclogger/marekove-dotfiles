@@ -1,0 +1,4 @@
+# Lets the logged-in user talk to the MX Master 4's hidraw node, so mx-host
+# and the marek.mxhost bar widget work without sudo. uaccess must sort before
+# 73-seat-late.rules, hence 70-. 0005 = Bluetooth, 046D = Logitech, B042 = MX Master 4.
+SUBSYSTEM=="hidraw", KERNELS=="0005:046D:B042.*", TAG+="uaccess"

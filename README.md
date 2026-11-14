@@ -55,6 +55,12 @@ This repository contains configurations for:
 - 🖱️ **mx-scroll** - toggle for hi-res ("smooth") scrolling on the MX Master 4, keybind `MEH + P`.
   XWayland turns every hi-res scroll event into its own button 4/5 click, so in CS2 a single
   wheel detent counts as several scrolls. Installed by copying, **not by stow** - see below
+- 🖱️ **mx-host** - Easy-Switch from software: `mx-host switch 1|2|3|next|prev` (in `bin`) sends the
+  MX Master 4 to another paired computer, keybinds `MEH + 1/2/3`, with a notification. It speaks HID++
+  feature 0x1814 (CHANGE_HOST) to the mouse's hidraw node; 0x1815 (HOSTS_INFO) gives the paired
+  computers' names, cached in `~/.cache/mx-host.json` for when the mouse is away. No sudo needed thanks
+  to `mx-master/etc/udev/rules.d/70-mx-master-hidraw.rules` (`uaccess`). Once the mouse leaves, this
+  computer can no longer reach it, so the way back is the same command on the other computer
 - 🔐 **sshd** - SSH server reachable only over [Tailscale](https://tailscale.com): keys only, user
   `marek` only, ufw allows port 22 just on `tailscale0`. Installed by copying, **not by stow** - see below
 
@@ -112,6 +118,11 @@ Custom shell changes never belong in `/usr/share/omarchy/` — an update overwri
   behind the higher weekly one. A missing window keeps its slot as `–%` — Claude stops reporting the
   session limit whenever the saved sign-in expires (`claude auth login` fixes it). Details and reset
   times are in the tooltip.
+- **`marek.mxhost`** (my own, not a clone) — MX Master 4 Easy-Switch in the bar, next to `marek.agents`:
+  mouse icon + channel number while the mouse is here, a dimmed crossed-out mouse while it is away.
+  The panel lists the three channels with the paired computers' names; clicking one runs
+  `mx-host switch N`. Polls `mx-host status --json` every 6 s (2 s while open). The plugin directory
+  is linked by hand (`ln -s`), because `stow omarchy` conflicts on the live `shell.json`.
 
 > After editing a `.qml` file in a clone you need `omarchy restart shell` — hot-reload on its own
 > leaves the old instance of the component in the bar.
