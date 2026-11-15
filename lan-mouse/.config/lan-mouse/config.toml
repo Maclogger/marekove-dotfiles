@@ -1,0 +1,14 @@
+port = 4242
+release_bind = [
+    "KeyA",
+    "KeyS",
+    "KeyD",
+    "KeyF",
+]
+
+[[clients]]
+hostname = "MAREKOV-WINDOWS"
+ips = []
+position = "right"
+
+[authorized_fingerprints]

@@ -61,6 +61,13 @@ This repository contains configurations for:
   computers' names, cached in `~/.cache/mx-host.json` for when the mouse is away. No sudo needed thanks
   to `mx-master/etc/udev/rules.d/70-mx-master-hidraw.rules` (`uaccess`). Once the mouse leaves, this
   computer can no longer reach it, so the way back is the same command on the other computer
+- 🖱️ **lan-mouse** - [lan-mouse](https://github.com/feschber/lan-mouse) software KVM: the MX Master 4
+  and keyboard stay on this machine and drive the Windows laptop when the cursor crosses the right
+  screen edge (`ASDF` together pulls it back). Runs as the `lan-mouse.service` user unit with the
+  `layer-shell` capture backend. Stow with `stow --no-folding lan-mouse`, so the TLS key lan-mouse
+  writes next to `config.toml` stays out of the repo. Needs `sudo pacman -S lan-mouse` and
+  `sudo ufw allow from 192.168.1.0/24 to any port 4242 proto udp`; the Windows side must authorize this
+  machine's fingerprint (`openssl x509 -in ~/.config/lan-mouse/lan-mouse.pem -noout -fingerprint -sha256`)
 - 🔐 **sshd** - SSH server reachable only over [Tailscale](https://tailscale.com): keys only, user
   `marek` only, ufw allows port 22 just on `tailscale0`. Installed by copying, **not by stow** - see below
 

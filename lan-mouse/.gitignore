@@ -1,0 +1,2 @@
+# lan-mouse writes its TLS private key next to config.toml; never commit it.
+*.pem

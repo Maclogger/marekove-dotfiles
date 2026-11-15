@@ -1,0 +1,13 @@
+[Unit]
+Description=Lan Mouse (share the mouse and keyboard with the Windows laptop)
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+# layer-shell is lan-mouse's documented capture path on Hyprland (no portal prompt).
+ExecStart=/usr/bin/lan-mouse --capture-backend layer-shell daemon
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=graphical-session.target
