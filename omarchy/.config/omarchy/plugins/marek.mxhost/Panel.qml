@@ -6,13 +6,15 @@ import qs.Commons as Commons
 import qs.Ui
 
 // MX Master 4 Easy-Switch: bar icon for "here / away", a panel to send the
-// mouse to another channel. All device access goes through mx-host.
+// mouse to another channel (via mx-host), and a switch for sharing the mouse
+// with the Windows laptop over lan-mouse (via lan-mouse-auto).
 Panel {
   id: root
   moduleName: "marek.mxhost"
   ipcTarget: "marek.mxhost"
 
   readonly property string helper: Quickshell.env("HOME") + "/.local/bin/mx-host"
+  readonly property string shareHelper: Quickshell.env("HOME") + "/.local/bin/lan-mouse-auto"
   readonly property color foreground: root.bar ? root.bar.foreground : Commons.Color.foreground
   readonly property color dim: Qt.darker(foreground, 1.4)
 
@@ -24,6 +26,10 @@ Panel {
   property var names: ({})
   property string error: ""
   property bool switching: false
+  property bool shareEnabled: true
+  property bool sharePresent: false
+  property bool shareActive: false
+  property string shareName: "Windows laptop"
   property int cursorIndex: 0
   property bool cursorActive: false
 
@@ -39,6 +45,7 @@ Panel {
   readonly property string tooltip: connected
     ? "MX Master 4 · " + channelLabel(current)
     : "MX Master 4 · " + (awayTo > 0 ? "away on " + channelLabel(awayTo) : "not connected")
+  readonly property string fullTooltip: tooltip + (shareActive ? "\nSharing with " + shareName + " (lan-mouse)" : "")
 
   function hostName(channel) {
     var name = names[String(channel)]
@@ -52,6 +59,34 @@ Panel {
   function buttonText(channel) {
     var text = hostName(channel) ? channel + "   " + hostName(channel) : "Device " + channel
     return channel === here ? text + "  (this computer)" : text
+  }
+
+  readonly property string shareText: {
+    if (!shareEnabled) return "Off · the right screen edge is just an edge"
+    if (shareActive) return "On · cross the right screen edge to reach " + shareName
+    return "Waiting for " + shareName + " to join the network"
+  }
+
+  function applyShare(raw) {
+    var state
+    try { state = JSON.parse(String(raw || "")) } catch (e) { return }
+    if (!state || typeof state !== "object") return
+    shareEnabled = state.mode !== "off"
+    sharePresent = state.present === true
+    shareActive = state.active === true
+    shareName = typeof state.name === "string" && state.name !== "" ? state.name.slice(0, 48) : "Windows laptop"
+  }
+
+  function toggleShare() {
+    if (shareToggleProc.running) return
+    shareEnabled = !shareEnabled
+    shareToggleProc.command = [shareHelper, "set", shareEnabled ? "auto" : "off"]
+    shareToggleProc.running = true
+  }
+
+  function activateCursor() {
+    if (cursorIndex === count) toggleShare()
+    else switchTo(cursorIndex + 1)
   }
 
   function apply(raw) {
@@ -69,6 +104,7 @@ Panel {
 
   function refresh() {
     if (!statusProc.running) statusProc.running = true
+    if (!shareStatusProc.running) shareStatusProc.running = true
   }
 
   function switchTo(channel) {
@@ -80,7 +116,7 @@ Panel {
 
   function moveCursor(delta) {
     if (!cursorActive) { cursorActive = true; return }
-    cursorIndex = (cursorIndex + delta + count) % count
+    cursorIndex = (cursorIndex + delta + count + 1) % (count + 1)
   }
 
   onOpenedChanged: {
@@ -97,6 +133,17 @@ Panel {
     id: statusProc
     command: [root.helper, "status", "--json"]
     stdout: StdioCollector { waitForEnd: true; onStreamFinished: root.apply(text) }
+  }
+
+  Process {
+    id: shareStatusProc
+    command: [root.shareHelper, "status", "--json"]
+    stdout: StdioCollector { waitForEnd: true; onStreamFinished: root.applyShare(text) }
+  }
+
+  Process {
+    id: shareToggleProc
+    onExited: root.refresh()
   }
 
   Process {
@@ -122,9 +169,9 @@ Panel {
     bar: root.bar
     text: root.icon
     opacity: root.connected ? 1.0 : 0.5
-    labelText: root.connected && !vertical ? String(root.current) : ""
-    slotSize: Style.bar.iconSlot * (root.connected && !vertical ? 1.6 : 1)
-    tooltipText: root.tooltip
+    labelText: vertical || !root.connected ? "" : String(root.current) + (root.shareActive ? " ⇄" : "")
+    slotSize: Style.bar.iconSlot * (vertical || !root.connected ? 1 : root.shareActive ? 2.2 : 1.6)
+    tooltipText: root.fullTooltip
     onPressed: root.toggle()
   }
 
@@ -142,7 +189,7 @@ Panel {
       anchors.fill: parent
       implicitHeight: column.implicitHeight
       onMoveRequested: function(dx, dy) { root.moveCursor(dy !== 0 ? dy : dx) }
-      onActivateRequested: if (root.cursorActive) root.switchTo(root.cursorIndex + 1)
+      onActivateRequested: if (root.cursorActive) root.activateCursor()
       onCloseRequested: root.close()
       onTabRequested: function(direction) { root.switchPanel(direction) }
 
@@ -210,6 +257,36 @@ Panel {
                 root.cursorActive = true
                 root.cursorIndex = index
               }
+            }
+          }
+        }
+
+        PanelSeparator { foreground: root.foreground }
+
+        Column {
+          width: parent.width
+          spacing: Style.space(8)
+
+          PanelSectionHeader {
+            text: "Share with Windows"
+            foreground: root.foreground
+            fontFamily: root.bar.fontFamily
+          }
+
+          Toggle {
+            width: parent.width
+            label: root.shareName
+            description: root.shareText
+            checked: root.shareEnabled
+            foreground: root.foreground
+            fontFamily: root.bar.fontFamily
+            titleSize: Style.font.bodySmall
+            hasCursor: root.cursorActive && root.cursorIndex === root.count
+            onClicked: root.toggleShare()
+            onHovered: function(hovered) {
+              if (!hovered) return
+              root.cursorActive = true
+              root.cursorIndex = root.count
             }
           }
         }

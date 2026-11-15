@@ -1,0 +1,13 @@
+[Unit]
+Description=Turn the lan-mouse link on only while the Windows laptop is on the network
+PartOf=graphical-session.target
+After=lan-mouse.service
+Wants=lan-mouse.service
+
+[Service]
+ExecStart=%h/.local/bin/lan-mouse-auto watch
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=graphical-session.target

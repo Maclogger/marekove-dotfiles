@@ -68,6 +68,11 @@ This repository contains configurations for:
   writes next to `config.toml` stays out of the repo. Needs `sudo pacman -S lan-mouse` and
   `sudo ufw allow from 192.168.1.0/24 to any port 4242 proto udp`; the Windows side must authorize this
   machine's fingerprint (`openssl x509 -in ~/.config/lan-mouse/lan-mouse.pem -noout -fingerprint -sha256`)
+  The link is never on by default: `lan-mouse-auto` (in `bin`, run by `lan-mouse-auto.service`) checks
+  every 5 s whether the laptop answers ARP (Windows drops ping) and activates the client only while it
+  does, so with the laptop away the right edge is a normal edge. Arrival is picked up within seconds,
+  leaving within ~30-60 s. `lan-mouse-auto set off|auto` (or the switch in the `marek.mxhost` panel)
+  turns it off by hand; the mode lives in `~/.local/state/lan-mouse-auto/mode`
 - 🔐 **sshd** - SSH server reachable only over [Tailscale](https://tailscale.com): keys only, user
   `marek` only, ufw allows port 22 just on `tailscale0`. Installed by copying, **not by stow** - see below
 
@@ -128,7 +133,9 @@ Custom shell changes never belong in `/usr/share/omarchy/` — an update overwri
 - **`marek.mxhost`** (my own, not a clone) — MX Master 4 Easy-Switch in the bar, next to `marek.agents`:
   mouse icon + channel number while the mouse is here, a dimmed crossed-out mouse while it is away.
   The panel lists the three channels with the paired computers' names; clicking one runs
-  `mx-host switch N`. Polls `mx-host status --json` every 6 s (2 s while open). The plugin directory
+  `mx-host switch N`. A *Share with Windows* switch below turns the lan-mouse link auto/off, and the
+  bar shows `⇄` next to the channel while it is on. Polls `mx-host status --json` and
+  `lan-mouse-auto status --json` every 6 s (2 s while open). The plugin directory
   is linked by hand (`ln -s`), because `stow omarchy` conflicts on the live `shell.json`.
 
 > After editing a `.qml` file in a clone you need `omarchy restart shell` — hot-reload on its own

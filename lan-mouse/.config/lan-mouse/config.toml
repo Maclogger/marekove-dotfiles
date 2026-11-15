@@ -1,12 +1,15 @@
-# lan-mouse: the MX Master 4 and the keyboard stay on this Linux machine and
-# drive the Windows laptop (NB1MRUC1) when the cursor crosses the right screen
-# edge. Pressing all of release_bind at once pulls the cursor back home.
-
 port = 4242
-release_bind = ["KeyA", "KeyS", "KeyD", "KeyF"]
+release_bind = [
+    "KeyA",
+    "KeyS",
+    "KeyD",
+    "KeyF",
+]
 
 [[clients]]
-position = "right"
 hostname = "NB1MRUC1"
 ips = ["192.168.1.119"]
+position = "right"
 activate_on_startup = true
+
+[authorized_fingerprints]

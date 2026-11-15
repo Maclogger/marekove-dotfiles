@@ -1,0 +1,144 @@
+#!/usr/bin/env python3
+"""
+lan-mouse-auto — turn the lan-mouse link to the Windows laptop on only while
+the laptop is on the network, unless it has been switched off by hand.
+
+Windows drops ping, so presence is checked through ARP instead: a stray UDP
+packet makes the kernel (re)resolve the laptop's address, and the neighbour
+table says whether it answered. Needs no root. Arrival shows up within one
+tick; leaving takes ~30-60 s, until the kernel's cached entry expires.
+
+Usage:
+  lan-mouse-auto watch              loop forever (the lan-mouse-auto.service)
+  lan-mouse-auto status [--json]
+  lan-mouse-auto set auto|off|toggle
+"""
+import json
+import os
+import re
+import socket
+import subprocess
+import sys
+import time
+import tomllib
+
+CONFIG = os.path.expanduser('~/.config/lan-mouse/config.toml')
+STATE_DIR = os.path.join(os.environ.get('XDG_STATE_HOME', os.path.expanduser('~/.local/state')), 'lan-mouse-auto')
+MODE_FILE = os.path.join(STATE_DIR, 'mode')
+STATUS_FILE = os.path.join(STATE_DIR, 'status.json')
+INTERVAL = 5
+CLIENT_ID = 0
+
+
+def client():
+    """(ip, name) of the Windows laptop from the lan-mouse config."""
+    with open(CONFIG, 'rb') as f:
+        entry = tomllib.load(f)['clients'][CLIENT_ID]
+    return entry['ips'][0], entry.get('hostname', entry['ips'][0])
+
+
+def read_mode():
+    try:
+        with open(MODE_FILE) as f:
+            return 'off' if f.read().strip() == 'off' else 'auto'
+    except OSError:
+        return 'auto'
+
+
+def write(path, text):
+    os.makedirs(STATE_DIR, exist_ok=True)
+    with open(path + '.new', 'w') as f:
+        f.write(text)
+    os.replace(path + '.new', path)
+
+
+def reachable(ip):
+    """True / False from the kernel's ARP verdict, or None while it is still deciding.
+
+    Reads the neighbour table first, then pokes the address so the kernel
+    re-verifies it in the background; the next tick sees the result.
+    """
+    out = subprocess.run(['ip', 'neigh', 'show', ip], capture_output=True, text=True).stdout
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            s.sendto(b'', (ip, 9))  # discard port; only the ARP lookup matters
+    except OSError:
+        return False
+    if re.search(r'\b(REACHABLE|PERMANENT)\b', out):
+        return True
+    if re.search(r'\b(FAILED|INCOMPLETE)\b', out):
+        return False
+    return None
+
+
+def link_active():
+    out = subprocess.run(['lan-mouse', 'cli', 'list'], capture_output=True, text=True, timeout=5).stdout
+    match = re.search(rf'^id {CLIENT_ID}:.*active: (true|false)', out, re.M)
+    return match is not None and match.group(1) == 'true'
+
+
+def set_link(on):
+    subprocess.run(['lan-mouse', 'cli', 'activate' if on else 'deactivate', str(CLIENT_ID)],
+                   capture_output=True, timeout=5)
+
+
+def tick():
+    mode = read_mode()
+    ip, name = client()
+    present = reachable(ip)
+    if present is None:
+        present = read_status().get('present', False)
+    want = mode == 'auto' and present
+    try:
+        active = link_active()
+        if active != want:
+            set_link(want)
+            active = want
+    except (OSError, subprocess.SubprocessError):
+        active = False
+    status = {'mode': mode, 'present': present, 'active': active, 'ip': ip, 'name': name, 'checked': int(time.time())}
+    write(STATUS_FILE, json.dumps(status))
+    return status
+
+
+def read_status():
+    try:
+        with open(STATUS_FILE) as f:
+            status = json.load(f)
+        if time.time() - status.get('checked', 0) > 3 * INTERVAL:
+            status.update(present=False, active=False, stale=True)
+    except (OSError, ValueError):
+        status = {'present': False, 'active': False, 'stale': True}
+    status['mode'] = read_mode()
+    return status
+
+
+def main():
+    args = sys.argv[1:] or ['status']
+    if args[0] == 'watch':
+        while True:
+            try:
+                tick()
+            except Exception as e:  # keep watching through transient errors
+                print(f'lan-mouse-auto: {e}', file=sys.stderr, flush=True)
+            time.sleep(INTERVAL)
+    if args[0] == 'status':
+        status = read_status()
+        if '--json' in args:
+            print(json.dumps(status))
+        else:
+            print(f"mode {status['mode']}, laptop {'present' if status['present'] else 'away'}, "
+                  f"link {'on' if status['active'] else 'off'}")
+        return 0
+    if args[0] == 'set' and len(args) == 2 and args[1] in ('auto', 'off', 'toggle'):
+        mode = args[1] if args[1] != 'toggle' else ('off' if read_mode() == 'auto' else 'auto')
+        write(MODE_FILE, mode + '\n')
+        status = tick()
+        print(f"mode {status['mode']}, link {'on' if status['active'] else 'off'}")
+        return 0
+    print(__doc__.split('Usage:')[1].rstrip(), file=sys.stderr)
+    return 2
+
+
+if __name__ == '__main__':
+    sys.exit(main())
